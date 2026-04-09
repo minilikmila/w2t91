@@ -12,9 +12,9 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     /**
-     * Password must be at least 10 characters with uppercase, lowercase, digit, and special character.
+     * Password must be at least 12 characters with uppercase, lowercase, digit, and special character.
      */
-    private const PASSWORD_PATTERN = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/';
+    private const PASSWORD_PATTERN = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/';
 
     private const TOKEN_LIFETIME_HOURS = 24;
 
@@ -146,7 +146,7 @@ class AuthController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:10',
+                'min:12',
                 function (string $attribute, mixed $value, \Closure $fail) {
                     if (!preg_match(self::PASSWORD_PATTERN, $value)) {
                         $fail('Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.');

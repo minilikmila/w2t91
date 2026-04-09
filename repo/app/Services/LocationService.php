@@ -110,10 +110,27 @@ class LocationService
         ];
 
         if ($distanceKm !== null) {
-            $data['distance_km'] = round($distanceKm, 1);
+            // Return only coarse distance bucket to prevent triangulation
+            $data['distance_range'] = $this->coarseDistanceBucket($distanceKm);
         }
 
         return $data;
+    }
+
+    /**
+     * Convert exact distance to a coarse bucket label to prevent triangulation.
+     */
+    private function coarseDistanceBucket(float $distanceKm): string
+    {
+        if ($distanceKm <= 1) {
+            return 'within_1km';
+        } elseif ($distanceKm <= 5) {
+            return 'within_5km';
+        } elseif ($distanceKm <= 10) {
+            return 'within_10km';
+        } else {
+            return 'over_10km';
+        }
     }
 
     /**

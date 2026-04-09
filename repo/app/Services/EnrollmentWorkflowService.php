@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Approval;
 use App\Models\ApprovalWorkflow;
 use App\Models\Enrollment;
+use App\Models\EnrollmentTransition;
 use App\Models\Learner;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +48,7 @@ class EnrollmentWorkflowService
         }
 
         // Check workflow blockers for advancement transitions
-        if (in_array($newStatus, [Enrollment::STATUS_IN_REVIEW, Enrollment::STATUS_APPROVED])) {
+        if (in_array($newStatus, [Enrollment::STATUS_UNDER_REVIEW, Enrollment::STATUS_APPROVED])) {
             $learner = $enrollment->learner;
             $check = ApprovalWorkflow::canAdvance($enrollment->workflow_metadata ?? [], $learner);
 
@@ -90,25 +91,36 @@ class EnrollmentWorkflowService
 
             $enrollment->update($updateData);
 
+            // Record immutable transition history
+            EnrollmentTransition::create([
+                'enrollment_id' => $enrollment->id,
+                'from_status' => $previousStatus,
+                'to_status' => $newStatus,
+                'actor_id' => $actor->id,
+                'reason_code' => $reasonCode,
+                'notes' => $notes,
+                'created_at' => now(),
+            ]);
+
             return $enrollment->fresh();
         });
     }
 
     /**
-     * Submit an enrollment for review (draft → pending_review).
+     * Submit an enrollment for review (draft → submitted).
      */
     public function submitForReview(Enrollment $enrollment, User $actor): Enrollment
     {
-        return $this->transition($enrollment, Enrollment::STATUS_PENDING_REVIEW, $actor, 'submitted_for_review');
+        return $this->transition($enrollment, Enrollment::STATUS_SUBMITTED, $actor, 'submitted_for_review');
     }
 
     /**
-     * Begin review of an enrollment (pending_review → in_review).
+     * Begin review of an enrollment (submitted → under_review).
      * Creates the first approval record.
      */
     public function beginReview(Enrollment $enrollment, User $reviewer): Enrollment
     {
-        $enrollment = $this->transition($enrollment, Enrollment::STATUS_IN_REVIEW, $reviewer, 'review_started');
+        $enrollment = $this->transition($enrollment, Enrollment::STATUS_UNDER_REVIEW, $reviewer, 'review_started');
 
         // Create first-level approval record
         Approval::create([

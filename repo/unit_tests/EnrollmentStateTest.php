@@ -7,10 +7,10 @@ use PHPUnit\Framework\TestCase;
 
 class EnrollmentStateTest extends TestCase
 {
-    public function test_draft_can_transition_to_pending_review(): void
+    public function test_draft_can_transition_to_submitted(): void
     {
         $enrollment = new Enrollment(['status' => Enrollment::STATUS_DRAFT]);
-        $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_PENDING_REVIEW));
+        $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_SUBMITTED));
     }
 
     public function test_draft_cannot_transition_to_approved(): void
@@ -25,33 +25,33 @@ class EnrollmentStateTest extends TestCase
         $this->assertFalse($enrollment->canTransitionTo(Enrollment::STATUS_ENROLLED));
     }
 
-    public function test_pending_review_can_transition_to_in_review(): void
+    public function test_submitted_can_transition_to_under_review(): void
     {
-        $enrollment = new Enrollment(['status' => Enrollment::STATUS_PENDING_REVIEW]);
-        $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_IN_REVIEW));
+        $enrollment = new Enrollment(['status' => Enrollment::STATUS_SUBMITTED]);
+        $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_UNDER_REVIEW));
     }
 
-    public function test_pending_review_can_be_cancelled(): void
+    public function test_submitted_can_be_cancelled(): void
     {
-        $enrollment = new Enrollment(['status' => Enrollment::STATUS_PENDING_REVIEW]);
+        $enrollment = new Enrollment(['status' => Enrollment::STATUS_SUBMITTED]);
         $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_CANCELLED));
     }
 
-    public function test_in_review_can_be_approved(): void
+    public function test_under_review_can_be_approved(): void
     {
-        $enrollment = new Enrollment(['status' => Enrollment::STATUS_IN_REVIEW]);
+        $enrollment = new Enrollment(['status' => Enrollment::STATUS_UNDER_REVIEW]);
         $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_APPROVED));
     }
 
-    public function test_in_review_can_be_rejected(): void
+    public function test_under_review_can_be_rejected(): void
     {
-        $enrollment = new Enrollment(['status' => Enrollment::STATUS_IN_REVIEW]);
+        $enrollment = new Enrollment(['status' => Enrollment::STATUS_UNDER_REVIEW]);
         $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_REJECTED));
     }
 
-    public function test_in_review_can_be_cancelled(): void
+    public function test_under_review_can_be_cancelled(): void
     {
-        $enrollment = new Enrollment(['status' => Enrollment::STATUS_IN_REVIEW]);
+        $enrollment = new Enrollment(['status' => Enrollment::STATUS_UNDER_REVIEW]);
         $this->assertTrue($enrollment->canTransitionTo(Enrollment::STATUS_CANCELLED));
     }
 
@@ -136,7 +136,7 @@ class EnrollmentStateTest extends TestCase
     public function test_get_allowed_transitions_from_draft(): void
     {
         $enrollment = new Enrollment(['status' => Enrollment::STATUS_DRAFT]);
-        $this->assertEquals([Enrollment::STATUS_PENDING_REVIEW], $enrollment->getAllowedTransitions());
+        $this->assertEquals([Enrollment::STATUS_SUBMITTED], $enrollment->getAllowedTransitions());
     }
 
     public function test_get_allowed_transitions_from_approved(): void

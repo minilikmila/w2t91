@@ -41,13 +41,13 @@ class BookingService
         // Validate lead time
         $this->validateLeadTime($startTime);
 
-        // Check for conflicts
-        $this->checkConflicts($resourceId, $startTime, $endTime);
-
         // Expire any stale provisional holds
         $this->expireStaleHolds();
 
+        // Conflict check + create inside a single transaction with row locking
         return DB::transaction(function () use ($resourceId, $learnerId, $startTime, $endTime, $idempotencyKey, $bookedBy) {
+            $this->checkConflictsWithLock($resourceId, $startTime, $endTime);
+
             return Booking::create([
                 'resource_id' => $resourceId,
                 'learner_id' => $learnerId,
@@ -65,7 +65,7 @@ class BookingService
     /**
      * Confirm a provisional hold into a final booking.
      */
-    public function confirmBooking(Booking $booking): Booking
+    public function confirmBooking(Booking $booking, int $expectedVersion = 0): Booking
     {
         if (!$booking->isProvisional()) {
             throw new \InvalidArgumentException('Only provisional bookings can be confirmed.');
@@ -76,16 +76,31 @@ class BookingService
             throw new \InvalidArgumentException('Provisional hold has expired.');
         }
 
-        // Re-check conflicts to prevent race conditions
-        $this->checkConflicts($booking->resource_id, $booking->start_time, $booking->end_time, $booking->id);
+        return DB::transaction(function () use ($booking, $expectedVersion) {
+            // Re-fetch with pessimistic lock to prevent race conditions
+            $locked = Booking::lockForUpdate()->find($booking->id);
 
-        $booking->update([
-            'status' => Booking::STATUS_CONFIRMED,
-            'confirmed_at' => now(),
-            'hold_expires_at' => null,
-        ]);
+            if (!$locked || !$locked->isProvisional()) {
+                throw new \InvalidArgumentException('Booking is no longer provisional.');
+            }
 
-        return $booking->fresh();
+            // Optimistic version check if caller provided one
+            if ($expectedVersion > 0 && $locked->version !== $expectedVersion) {
+                throw new \InvalidArgumentException(
+                    "Version conflict: expected {$expectedVersion}, found {$locked->version}."
+                );
+            }
+
+            $this->checkConflictsWithLock($locked->resource_id, $locked->start_time, $locked->end_time, $locked->id);
+
+            $locked->update([
+                'status' => Booking::STATUS_CONFIRMED,
+                'confirmed_at' => now(),
+                'hold_expires_at' => null,
+            ]);
+
+            return $locked->fresh();
+        });
     }
 
     /**
@@ -117,7 +132,7 @@ class BookingService
     /**
      * Reschedule a booking to a new time.
      */
-    public function rescheduleBooking(Booking $booking, Carbon $newStartTime, Carbon $newEndTime): Booking
+    public function rescheduleBooking(Booking $booking, Carbon $newStartTime, Carbon $newEndTime, int $expectedVersion = 0): Booking
     {
         if ($booking->status !== Booking::STATUS_CONFIRMED) {
             throw new \InvalidArgumentException('Only confirmed bookings can be rescheduled.');
@@ -133,15 +148,31 @@ class BookingService
 
         $this->validateSlotIncrement($newStartTime, $newEndTime);
         $this->validateLeadTime($newStartTime);
-        $this->checkConflicts($booking->resource_id, $newStartTime, $newEndTime, $booking->id);
 
-        $booking->update([
-            'start_time' => $newStartTime,
-            'end_time' => $newEndTime,
-            'version' => $booking->version + 1,
-        ]);
+        return DB::transaction(function () use ($booking, $newStartTime, $newEndTime, $expectedVersion) {
+            $locked = Booking::lockForUpdate()->find($booking->id);
 
-        return $booking->fresh();
+            if (!$locked || $locked->status !== Booking::STATUS_CONFIRMED) {
+                throw new \InvalidArgumentException('Booking is no longer confirmed.');
+            }
+
+            // Optimistic version check if caller provided one
+            if ($expectedVersion > 0 && $locked->version !== $expectedVersion) {
+                throw new \InvalidArgumentException(
+                    "Version conflict: expected {$expectedVersion}, found {$locked->version}."
+                );
+            }
+
+            $this->checkConflictsWithLock($locked->resource_id, $newStartTime, $newEndTime, $locked->id);
+
+            $locked->update([
+                'start_time' => $newStartTime,
+                'end_time' => $newEndTime,
+                'version' => $locked->version + 1,
+            ]);
+
+            return $locked->fresh();
+        });
     }
 
     /**
@@ -177,9 +208,9 @@ class BookingService
             throw new \InvalidArgumentException('The waitlist offer has expired.');
         }
 
-        $this->checkConflicts($entry->resource_id, $entry->desired_start_time, $entry->desired_end_time);
+        return DB::transaction(function () use ($entry, $bookedBy) {
+            $this->checkConflictsWithLock($entry->resource_id, $entry->desired_start_time, $entry->desired_end_time);
 
-        $booking = DB::transaction(function () use ($entry, $bookedBy) {
             $entry->update([
                 'status' => WaitlistEntry::STATUS_ACCEPTED,
                 'accepted_at' => now(),
@@ -197,8 +228,6 @@ class BookingService
                 'confirmed_at' => now(),
             ]);
         });
-
-        return $booking;
     }
 
     /**
@@ -227,7 +256,6 @@ class BookingService
      */
     public function expireStaleHolds(): void
     {
-        // Expire provisional bookings past hold time
         Booking::where('status', Booking::STATUS_PROVISIONAL)
             ->where('hold_expires_at', '<', now())
             ->update([
@@ -236,7 +264,6 @@ class BookingService
                 'cancellation_type' => 'hold_expired',
             ]);
 
-        // Expire waitlist offers past offer time
         WaitlistEntry::where('status', WaitlistEntry::STATUS_OFFERED)
             ->where('offer_expires_at', '<', now())
             ->update([
@@ -277,11 +304,12 @@ class BookingService
     }
 
     /**
-     * Check for booking conflicts on a resource.
+     * Check for booking conflicts with pessimistic row locking to prevent oversell.
      */
-    private function checkConflicts(int $resourceId, Carbon $startTime, Carbon $endTime, ?int $excludeBookingId = null): void
+    private function checkConflictsWithLock(int $resourceId, Carbon $startTime, Carbon $endTime, ?int $excludeBookingId = null): void
     {
-        $query = Booking::where('resource_id', $resourceId)
+        $query = Booking::lockForUpdate()
+            ->where('resource_id', $resourceId)
             ->whereIn('status', [Booking::STATUS_PROVISIONAL, Booking::STATUS_CONFIRMED])
             ->where('start_time', '<', $endTime)
             ->where('end_time', '>', $startTime);

@@ -16,7 +16,7 @@ class DeduplicationService
 
     /**
      * Generate a deterministic fingerprint for a learner based on core identity fields.
-     * Uses normalized first_name + last_name + date_of_birth as the base.
+     * Uses normalized first_name + last_name + date_of_birth + last-4 phone digits.
      */
     public function generateFingerprint(array $data): string
     {
@@ -25,10 +25,13 @@ class DeduplicationService
         $firstName = $this->normalizer->normalizeName($data['first_name'] ?? '');
         $lastName = $this->normalizer->normalizeName($data['last_name'] ?? '');
         $dob = $this->normalizer->normalizeDate($data['date_of_birth'] ?? '');
+        $phone = $this->normalizer->normalizePhone($data['phone'] ?? '');
+        $phoneLast4 = $phone ? substr(preg_replace('/\D/', '', $phone), -4) : '';
 
         $parts[] = mb_strtolower(trim($firstName ?? ''));
         $parts[] = mb_strtolower(trim($lastName ?? ''));
         $parts[] = $dob ?? '';
+        $parts[] = $phoneLast4;
 
         $raw = implode('|', $parts);
 

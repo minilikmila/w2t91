@@ -99,7 +99,7 @@ class EnrollmentApiTest extends TestCase
             ->postJson("/api/enrollments/{$enrollment->id}/submit");
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.status', 'pending_review');
+            ->assertJsonPath('data.status', 'submitted');
     }
 
     public function test_enrollment_invalid_transition_rejected(): void

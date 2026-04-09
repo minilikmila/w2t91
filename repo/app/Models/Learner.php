@@ -25,6 +25,8 @@ class Learner extends Model
         'date_of_birth',
         'email',
         'phone',
+        'search_email',
+        'search_phone',
         'gender',
         'nationality',
         'language',
@@ -35,6 +37,19 @@ class Learner extends Model
         'fingerprint',
         'metadata',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Learner $learner) {
+            // Populate normalized searchable columns before encryption runs
+            if ($learner->isDirty('email') && $learner->email) {
+                $learner->search_email = strtolower(trim($learner->email));
+            }
+            if ($learner->isDirty('phone') && $learner->phone) {
+                $learner->search_phone = preg_replace('/\D/', '', $learner->phone);
+            }
+        });
+    }
 
     protected function casts(): array
     {

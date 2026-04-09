@@ -34,7 +34,7 @@ class ProcessEnrollmentApproval implements ShouldQueue
             return;
         }
 
-        if ($enrollment->status !== Enrollment::STATUS_IN_REVIEW) {
+        if ($enrollment->status !== Enrollment::STATUS_UNDER_REVIEW) {
             Log::warning("ProcessEnrollmentApproval: Enrollment {$this->enrollmentId} is not in review (status: {$enrollment->status}).");
             return;
         }

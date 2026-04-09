@@ -18,6 +18,17 @@ class LogRequestResponse
         'current_password',
         'token',
         'authorization',
+        'email',
+        'phone',
+        'guardian_contact',
+        'guardian_name',
+        'address',
+        'date_of_birth',
+        'first_name',
+        'last_name',
+        'answers',
+        'ssn',
+        'national_id',
     ];
 
     public function handle(Request $request, Closure $next): Response

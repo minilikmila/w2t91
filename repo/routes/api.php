@@ -9,6 +9,9 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LearnerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\RouteController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SecurityTrainingController;
 use Illuminate\Support\Facades\Route;
 
@@ -169,4 +172,44 @@ Route::middleware(['auth.token', 'check.lockout'])->group(function () {
         ->middleware('permission:reports.manage');
     Route::get('/reports/{id}/download', [ReportController::class, 'download'])
         ->middleware('permission:reports.view');
+
+    // Resource routes
+    Route::get('/resources', [ResourceController::class, 'index'])
+        ->middleware('permission:resources.view');
+    Route::post('/resources', [ResourceController::class, 'store'])
+        ->middleware('permission:resources.manage');
+    Route::get('/resources/{id}', [ResourceController::class, 'show'])
+        ->middleware('permission:resources.view');
+    Route::put('/resources/{id}', [ResourceController::class, 'update'])
+        ->middleware('permission:resources.manage');
+    Route::delete('/resources/{id}', [ResourceController::class, 'destroy'])
+        ->middleware('permission:resources.manage');
+
+    // Schedule routes
+    Route::get('/schedules', [ScheduleController::class, 'index'])
+        ->middleware('permission:resources.view');
+    Route::post('/schedules', [ScheduleController::class, 'store'])
+        ->middleware('permission:resources.manage');
+    Route::get('/schedules/{id}', [ScheduleController::class, 'show'])
+        ->middleware('permission:resources.view');
+    Route::put('/schedules/{id}', [ScheduleController::class, 'update'])
+        ->middleware('permission:resources.manage');
+    Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy'])
+        ->middleware('permission:resources.manage');
+    Route::get('/schedules/{id}/slots', [ScheduleController::class, 'slots'])
+        ->middleware('permission:resources.view');
+
+    // Route routes
+    Route::get('/routes', [RouteController::class, 'index'])
+        ->middleware('permission:resources.view');
+    Route::post('/routes', [RouteController::class, 'store'])
+        ->middleware('permission:resources.manage');
+    Route::get('/routes/{id}', [RouteController::class, 'show'])
+        ->middleware('permission:resources.view');
+    Route::put('/routes/{id}', [RouteController::class, 'update'])
+        ->middleware('permission:resources.manage');
+    Route::delete('/routes/{id}', [RouteController::class, 'destroy'])
+        ->middleware('permission:resources.manage');
+    Route::get('/routes/{id}/versions', [RouteController::class, 'versions'])
+        ->middleware('permission:resources.view');
 });

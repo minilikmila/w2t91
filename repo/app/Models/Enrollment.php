@@ -14,8 +14,8 @@ class Enrollment extends Model
     use HasFactory, SoftDeletes, AuditsTimestamps;
 
     public const STATUS_DRAFT = 'draft';
-    public const STATUS_PENDING_REVIEW = 'pending_review';
-    public const STATUS_IN_REVIEW = 'in_review';
+    public const STATUS_SUBMITTED = 'submitted';
+    public const STATUS_UNDER_REVIEW = 'under_review';
     public const STATUS_APPROVED = 'approved';
     public const STATUS_REJECTED = 'rejected';
     public const STATUS_ENROLLED = 'enrolled';
@@ -28,9 +28,9 @@ class Enrollment extends Model
      * Valid state transitions: current_status => [allowed next statuses]
      */
     public const TRANSITIONS = [
-        self::STATUS_DRAFT => [self::STATUS_PENDING_REVIEW],
-        self::STATUS_PENDING_REVIEW => [self::STATUS_IN_REVIEW, self::STATUS_CANCELLED],
-        self::STATUS_IN_REVIEW => [self::STATUS_APPROVED, self::STATUS_REJECTED, self::STATUS_CANCELLED],
+        self::STATUS_DRAFT => [self::STATUS_SUBMITTED],
+        self::STATUS_SUBMITTED => [self::STATUS_UNDER_REVIEW, self::STATUS_CANCELLED],
+        self::STATUS_UNDER_REVIEW => [self::STATUS_APPROVED, self::STATUS_REJECTED, self::STATUS_CANCELLED],
         self::STATUS_APPROVED => [self::STATUS_ENROLLED, self::STATUS_WAITLISTED, self::STATUS_CANCELLED],
         self::STATUS_REJECTED => [self::STATUS_DRAFT],
         self::STATUS_ENROLLED => [self::STATUS_CANCELLED, self::STATUS_COMPLETED],
@@ -89,6 +89,11 @@ class Enrollment extends Model
     public function approvals(): HasMany
     {
         return $this->hasMany(Approval::class);
+    }
+
+    public function transitions(): HasMany
+    {
+        return $this->hasMany(EnrollmentTransition::class);
     }
 
     public function canTransitionTo(string $newStatus): bool

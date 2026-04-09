@@ -181,11 +181,17 @@ class LocationController extends Controller
             $location->longitude
         );
 
-        return response()->json([
+        $response = [
             'location_id' => $location->id,
             'within_geofence' => $isWithin,
-            'distance_km' => round($distance, 3),
-        ]);
+        ];
+
+        // Only expose exact distance to users with precise-coordinate permission
+        if ($this->canViewPreciseCoordinates($request)) {
+            $response['distance_km'] = round($distance, 3);
+        }
+
+        return response()->json($response);
     }
 
     /**

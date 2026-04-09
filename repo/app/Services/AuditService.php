@@ -90,7 +90,32 @@ class AuditService
                     'actual' => $event->prior_hash,
                 ];
             } else {
-                $valid++;
+                // Recompute the event's own hash from stored fields to detect row tampering
+                $recomputedPayload = json_encode([
+                    'event_type' => $event->event_type,
+                    'entity_type' => $event->entity_type,
+                    'entity_id' => $event->entity_id,
+                    'actor_id' => $event->actor_id,
+                    'actor_type' => $event->actor_type,
+                    'old_values' => $event->old_values,
+                    'new_values' => $event->new_values,
+                    'description' => $event->description,
+                    'prior_hash' => $event->prior_hash,
+                    'created_at' => $event->created_at->toIso8601String(),
+                ]);
+                $recomputedHash = hash('sha256', $recomputedPayload);
+
+                if ($recomputedHash !== $event->event_hash) {
+                    $invalid++;
+                    $errors[] = [
+                        'event_id' => $event->id,
+                        'error' => 'event_hash tampered',
+                        'expected' => $recomputedHash,
+                        'actual' => $event->event_hash,
+                    ];
+                } else {
+                    $valid++;
+                }
             }
 
             $previousHash = $event->event_hash;

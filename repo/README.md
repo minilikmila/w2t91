@@ -1,4 +1,4 @@
-# EaglePoint Learning Management System API
+# Learning Management System API
 
 Monolithic Laravel 11 API backend for learner management, enrollment workflows, scheduling/booking, location services, security training, and audit/reporting. Designed for single-machine Docker deployment with no external service dependencies.
 
@@ -106,8 +106,6 @@ All protected endpoints require `Authorization: Bearer <token>`.
 | Audit       | `/audit`, `/audit/verify`, `/audit/entity/{type}/{id}`                                     | Hash-chained append-only audit log                  |
 | Reports     | `/reports`, `/reports/{id}/generate`, `/download`                                          | Report definitions with CSV/JSON export             |
 
-See [docs/api-spec.md](docs/api-spec.md) for complete endpoint documentation.
-
 ## Project Structure
 
 ```
@@ -147,11 +145,6 @@ run_tests.sh              # Test runner with summary output
 | `planner`     | Learner management, scheduling, locations, reports (21 permissions) |
 | `reviewer`    | Enrollment approval, audit viewing (10 permissions)                 |
 | `field_agent` | Field-level learner and booking access (11 permissions)             |
-
-## Documentation
-
-- [Design Document](docs/design.md) — Architecture, modules, data flows, security
-- [API Specification](docs/api-spec.md) — All endpoints with request/response formats
 
 ## Verification Checklist
 

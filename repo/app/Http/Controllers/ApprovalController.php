@@ -84,7 +84,7 @@ class ApprovalController extends Controller
             ], 422);
         }
 
-        if ($enrollment->status !== Enrollment::STATUS_IN_REVIEW) {
+        if ($enrollment->status !== Enrollment::STATUS_UNDER_REVIEW) {
             return response()->json([
                 'error' => 'Invalid State',
                 'message' => 'The enrollment is not currently in review.',
@@ -129,7 +129,7 @@ class ApprovalController extends Controller
             ], 422);
         }
 
-        if ($enrollment->status !== Enrollment::STATUS_IN_REVIEW) {
+        if ($enrollment->status !== Enrollment::STATUS_UNDER_REVIEW) {
             return response()->json([
                 'error' => 'Invalid State',
                 'message' => 'The enrollment is not currently in review.',
