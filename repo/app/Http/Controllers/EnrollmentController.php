@@ -77,6 +77,7 @@ class EnrollmentController extends Controller
     public function transition(EnrollmentRequest $request, int $id): JsonResponse
     {
         $enrollment = Enrollment::findOrFail($id);
+        $this->authorizeMutation($request, $enrollment);
         $user = $request->user();
         $newStatus = $request->status;
 
@@ -107,6 +108,7 @@ class EnrollmentController extends Controller
     public function submitForReview(int $id, Request $request): JsonResponse
     {
         $enrollment = Enrollment::findOrFail($id);
+        $this->authorizeMutation($request, $enrollment);
 
         try {
             $enrollment = $this->workflowService->submitForReview($enrollment, $request->user());
@@ -127,6 +129,7 @@ class EnrollmentController extends Controller
     public function beginReview(int $id, Request $request): JsonResponse
     {
         $enrollment = Enrollment::findOrFail($id);
+        $this->authorizeRecord($request, $enrollment);
 
         try {
             $enrollment = $this->workflowService->beginReview($enrollment, $request->user());
@@ -144,9 +147,10 @@ class EnrollmentController extends Controller
         ]);
     }
 
-    public function workflowStatus(int $id): JsonResponse
+    public function workflowStatus(Request $request, int $id): JsonResponse
     {
         $enrollment = Enrollment::with(['learner', 'approvals'])->findOrFail($id);
+        $this->authorizeRecord($request, $enrollment);
 
         return response()->json($this->workflowService->getWorkflowStatus($enrollment));
     }
@@ -158,6 +162,7 @@ class EnrollmentController extends Controller
         ]);
 
         $enrollment = Enrollment::findOrFail($id);
+        $this->authorizeMutation($request, $enrollment);
 
         try {
             $result = $this->refundService->cancelWithRefundCheck(
@@ -190,6 +195,7 @@ class EnrollmentController extends Controller
         ]);
 
         $enrollment = Enrollment::findOrFail($id);
+        $this->authorizeMutation($request, $enrollment);
 
         // Check eligibility first
         $eligibility = $this->refundService->isEligibleForRefund($enrollment);

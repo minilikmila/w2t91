@@ -144,6 +144,7 @@ class BookingController extends Controller
         ]);
 
         $booking = Booking::findOrFail($id);
+        $this->authorizeMutation($request, $booking);
 
         try {
             $booking = $this->bookingService->rescheduleBooking(
@@ -193,6 +194,7 @@ class BookingController extends Controller
     public function acceptWaitlistOffer(Request $request, int $id): JsonResponse
     {
         $entry = WaitlistEntry::findOrFail($id);
+        $this->authorizeRecord($request, $entry);
 
         try {
             $booking = $this->bookingService->acceptWaitlistOffer($entry, $request->user()->id);

@@ -78,6 +78,7 @@ class ApprovalController extends Controller
         ]);
 
         $approval = Approval::with('enrollment')->findOrFail($id);
+        $this->authorizeRecord($request, $approval);
         $enrollment = $approval->enrollment;
 
         if (!$approval->isPending()) {
@@ -123,6 +124,7 @@ class ApprovalController extends Controller
         ]);
 
         $approval = Approval::with('enrollment')->findOrFail($id);
+        $this->authorizeRecord($request, $approval);
         $enrollment = $approval->enrollment;
 
         if (!$approval->isPending()) {
@@ -169,6 +171,7 @@ class ApprovalController extends Controller
     public function claim(Request $request, int $id): JsonResponse
     {
         $approval = Approval::findOrFail($id);
+        $this->authorizeRecord($request, $approval);
 
         if (!$approval->isPending()) {
             return response()->json([

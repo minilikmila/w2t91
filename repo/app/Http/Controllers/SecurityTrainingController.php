@@ -62,9 +62,10 @@ class SecurityTrainingController extends Controller
         ], 201);
     }
 
-    public function showExercise(int $id): JsonResponse
+    public function showExercise(Request $request, int $id): JsonResponse
     {
         $exercise = SecurityExercise::with('cohortAssignments')->findOrFail($id);
+        $this->authorizeRecord($request, $exercise);
 
         return response()->json(['data' => $exercise]);
     }
@@ -84,6 +85,7 @@ class SecurityTrainingController extends Controller
         ]);
 
         $exercise = SecurityExercise::findOrFail($id);
+        $this->authorizeMutation($request, $exercise);
         $exercise->update($request->only([
             'title', 'description', 'type', 'difficulty',
             'max_score', 'passing_score', 'scoring_rules',
@@ -287,9 +289,10 @@ class SecurityTrainingController extends Controller
         ]);
     }
 
-    public function showAttempt(int $attemptId): JsonResponse
+    public function showAttempt(Request $request, int $attemptId): JsonResponse
     {
         $attempt = ExerciseAttempt::with(['exercise', 'learner', 'cohort'])->findOrFail($attemptId);
+        $this->authorizeRecord($request, $attempt);
 
         return response()->json(['data' => $attempt]);
     }

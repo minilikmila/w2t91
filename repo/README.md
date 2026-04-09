@@ -31,11 +31,12 @@ If you change the Dockerfile, rebuild with `docker compose up -d --build`.
 
 ## Docker Services
 
-| Service   | Container            | Port            | Description             |
-| --------- | -------------------- | --------------- | ----------------------- |
-| app       | eaglepoint-app       | 9000 (internal) | PHP 8.2-FPM application |
-| webserver | eaglepoint-webserver | 8000            | Nginx reverse proxy     |
-| mysql     | eaglepoint-mysql     | 3306            | MySQL 8.0 database      |
+| Service   | Container            | Port            | Description                          |
+| --------- | -------------------- | --------------- | ------------------------------------ |
+| app       | eaglepoint-app       | 9000 (internal) | PHP 8.2-FPM application              |
+| worker    | eaglepoint-worker    | —               | Queue worker (processes approval jobs)|
+| webserver | eaglepoint-webserver | 8000            | Nginx reverse proxy                  |
+| mysql     | eaglepoint-mysql     | 3306            | MySQL 8.0 database                   |
 
 ### Useful Docker Commands
 
@@ -80,10 +81,10 @@ docker compose exec app php vendor/bin/phpunit unit_tests/DataNormalizationTest.
 
 ### Test Suite Summary
 
-| Suite       | Location      | Tests | Covers                                                                                                             |
-| ----------- | ------------- | ----- | ------------------------------------------------------------------------------------------------------------------ |
-| Custom Unit | `unit_tests/` | 94    | Normalization, deduplication, enrollment states, booking rules, audit chaining, encryption/masking, geofencing     |
-| Custom API  | `API_tests/`  | 49    | Auth, permissions, learner CRUD/import, enrollment workflow, booking conflicts, location disclosure, report export |
+| Suite       | Location      | Tests | Covers                                                                                                                                              |
+| ----------- | ------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Custom Unit | `unit_tests/` | 127   | Normalization, deduplication, enrollment states, booking rules/versioning, audit chaining/tamper detection, encryption/masking, geofencing, password policy |
+| Custom API  | `API_tests/`  | 79    | Auth, permissions, authorization, learner CRUD/search/import, enrollment workflow/transitions, approvals, booking conflicts, location disclosure, resources/schedules/routes, reports |
 
 ## API Overview
 
@@ -132,8 +133,8 @@ docker/
 routes/
 └── api.php               # All API route definitions
 tests/                    # PHPUnit base classes
-unit_tests/               # 7 unit test files (94 tests)
-API_tests/                # 6 API test files (49 tests)
+unit_tests/               # 11 unit test files (127 tests)
+API_tests/                # 12 API test files (79 tests)
 run_tests.sh              # Test runner with summary output
 ```
 
