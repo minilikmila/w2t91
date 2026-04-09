@@ -38,10 +38,11 @@ class Learner extends Model
         'metadata',
     ];
 
-    protected static function booted(): void
+    protected static function boot(): void
     {
+        // Register search column population BEFORE parent::boot() so it runs
+        // before EncryptsPii's saving listener encrypts email/phone.
         static::saving(function (Learner $learner) {
-            // Populate normalized searchable columns before encryption runs
             if ($learner->isDirty('email') && $learner->email) {
                 $learner->search_email = strtolower(trim($learner->email));
             }
@@ -49,6 +50,8 @@ class Learner extends Model
                 $learner->search_phone = preg_replace('/\D/', '', $learner->phone);
             }
         });
+
+        parent::boot();
     }
 
     protected function casts(): array

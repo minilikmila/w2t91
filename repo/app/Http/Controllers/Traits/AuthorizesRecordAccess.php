@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\Models\Booking;
 use App\Models\Enrollment;
 use App\Models\FieldPlacement;
+use App\Models\Learner;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -54,6 +55,11 @@ trait AuthorizesRecordAccess
             if (isset($record->{$col}) && (int) $record->{$col} === (int) $user->id) {
                 return true;
             }
+        }
+
+        // When the record IS a Learner, check operational link directly
+        if ($record instanceof Learner) {
+            return $this->userHasOperationalLinkToLearner($user, (int) $record->id);
         }
 
         // Learner-linked records: check if the user has a concrete operational
