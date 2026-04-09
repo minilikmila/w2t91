@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Jobs\ProcessEnrollmentApproval;
 use App\Models\Approval;
 use App\Models\Enrollment;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
 {
+    use AuthorizesRecordAccess;
     private EnrollmentWorkflowService $workflowService;
 
     public function __construct(EnrollmentWorkflowService $workflowService)
@@ -55,9 +57,10 @@ class ApprovalController extends Controller
     /**
      * Show a single approval with enrollment details.
      */
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $approval = Approval::with(['enrollment.learner', 'reviewer'])->findOrFail($id);
+        $this->authorizeRecord($request, $approval);
 
         return response()->json(['data' => $approval]);
     }

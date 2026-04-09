@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Http\Requests\EnrollmentRequest;
 use App\Models\Enrollment;
 use App\Models\Learner;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 
 class EnrollmentController extends Controller
 {
+    use AuthorizesRecordAccess;
     private EnrollmentWorkflowService $workflowService;
     private RefundService $refundService;
 
@@ -61,9 +63,10 @@ class EnrollmentController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $enrollment = Enrollment::with(['learner', 'approvals', 'lastActor'])->findOrFail($id);
+        $this->authorizeRecord($request, $enrollment);
 
         return response()->json([
             'data' => $enrollment,

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
+    use AuthorizesRecordAccess;
+
     public function index(Request $request): JsonResponse
     {
         $query = Resource::query();
@@ -46,9 +49,10 @@ class ResourceController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $resource = Resource::findOrFail($id);
+        $this->authorizeRecord($request, $resource);
 
         return response()->json(['data' => $resource]);
     }
@@ -65,6 +69,7 @@ class ResourceController extends Controller
         ]);
 
         $resource = Resource::findOrFail($id);
+        $this->authorizeMutation($request, $resource);
         $resource->update($request->only([
             'name', 'type', 'description', 'capacity', 'is_active', 'metadata',
         ]));
@@ -75,9 +80,10 @@ class ResourceController extends Controller
         ]);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
         $resource = Resource::findOrFail($id);
+        $this->authorizeMutation($request, $resource);
         $resource->delete();
 
         return response()->json(['message' => 'Resource deleted successfully.']);

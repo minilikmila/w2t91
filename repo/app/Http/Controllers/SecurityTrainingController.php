@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Models\Cohort;
 use App\Models\CohortAssignment;
 use App\Models\ExerciseAttempt;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 
 class SecurityTrainingController extends Controller
 {
+    use AuthorizesRecordAccess;
     // --- Exercises ---
 
     public function indexExercises(Request $request): JsonResponse
@@ -217,6 +219,7 @@ class SecurityTrainingController extends Controller
         ]);
 
         $attempt = ExerciseAttempt::findOrFail($attemptId);
+        $this->authorizeRecord($request, $attempt);
 
         if ($attempt->status !== 'in_progress') {
             return response()->json([
@@ -247,6 +250,7 @@ class SecurityTrainingController extends Controller
         ]);
 
         $attempt = ExerciseAttempt::with('exercise')->findOrFail($attemptId);
+        $this->authorizeRecord($request, $attempt);
 
         if ($attempt->status !== 'in_progress') {
             return response()->json([

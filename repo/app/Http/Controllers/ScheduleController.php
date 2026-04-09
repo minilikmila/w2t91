@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Models\Schedule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
+    use AuthorizesRecordAccess;
+
     public function index(Request $request): JsonResponse
     {
         $query = Schedule::with('resource');
@@ -55,9 +58,10 @@ class ScheduleController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $schedule = Schedule::with('resource')->findOrFail($id);
+        $this->authorizeRecord($request, $schedule);
 
         return response()->json(['data' => $schedule]);
     }
@@ -76,6 +80,7 @@ class ScheduleController extends Controller
         ]);
 
         $schedule = Schedule::findOrFail($id);
+        $this->authorizeMutation($request, $schedule);
         $schedule->update($request->only([
             'resource_id', 'date', 'start_time', 'end_time',
             'slot_duration_minutes', 'capacity_per_slot', 'is_active', 'metadata',
@@ -87,17 +92,19 @@ class ScheduleController extends Controller
         ]);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
         $schedule = Schedule::findOrFail($id);
+        $this->authorizeMutation($request, $schedule);
         $schedule->delete();
 
         return response()->json(['message' => 'Schedule deleted successfully.']);
     }
 
-    public function slots(int $id): JsonResponse
+    public function slots(Request $request, int $id): JsonResponse
     {
         $schedule = Schedule::findOrFail($id);
+        $this->authorizeRecord($request, $schedule);
 
         return response()->json([
             'data' => $schedule->getSlots(),

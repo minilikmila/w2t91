@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Http\Requests\BookingRequest;
 use App\Models\Booking;
 use App\Models\WaitlistEntry;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+    use AuthorizesRecordAccess;
     private BookingService $bookingService;
 
     public function __construct(BookingService $bookingService)
@@ -78,16 +80,18 @@ class BookingController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $booking = Booking::with(['resource', 'learner', 'bookedByUser'])->findOrFail($id);
+        $this->authorizeRecord($request, $booking);
 
         return response()->json(['data' => $booking]);
     }
 
-    public function confirm(int $id): JsonResponse
+    public function confirm(Request $request, int $id): JsonResponse
     {
         $booking = Booking::findOrFail($id);
+        $this->authorizeRecord($request, $booking);
 
         try {
             $booking = $this->bookingService->confirmBooking($booking);
@@ -113,6 +117,7 @@ class BookingController extends Controller
         ]);
 
         $booking = Booking::findOrFail($id);
+        $this->authorizeMutation($request, $booking);
 
         try {
             $booking = $this->bookingService->cancelBooking($booking, $request->notes);

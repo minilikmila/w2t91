@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Models\Route;
 use App\Models\RouteVersion;
 use Illuminate\Http\JsonResponse;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 
 class RouteController extends Controller
 {
+    use AuthorizesRecordAccess;
+
     public function index(Request $request): JsonResponse
     {
         $query = Route::query();
@@ -35,7 +38,6 @@ class RouteController extends Controller
             'name', 'description', 'waypoints', 'metadata',
         ]));
 
-        // Create initial version
         RouteVersion::create([
             'route_id' => $route->id,
             'version_number' => 1,
@@ -51,9 +53,10 @@ class RouteController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $route = Route::with('versions')->findOrFail($id);
+        $this->authorizeRecord($request, $route);
 
         return response()->json(['data' => $route]);
     }
@@ -70,15 +73,14 @@ class RouteController extends Controller
         ]);
 
         $route = Route::findOrFail($id);
+        $this->authorizeMutation($request, $route);
 
-        // Capture prior values before update
         $priorValues = $route->only(['name', 'description', 'status', 'waypoints', 'metadata']);
 
         $route->update($request->only([
             'name', 'description', 'waypoints', 'metadata', 'status',
         ]));
 
-        // Create a new version
         $latestVersion = $route->versions()->max('version_number') ?? 0;
 
         RouteVersion::create([
@@ -96,17 +98,19 @@ class RouteController extends Controller
         ]);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
         $route = Route::findOrFail($id);
+        $this->authorizeMutation($request, $route);
         $route->delete();
 
         return response()->json(['message' => 'Route deleted successfully.']);
     }
 
-    public function versions(int $id): JsonResponse
+    public function versions(Request $request, int $id): JsonResponse
     {
         $route = Route::findOrFail($id);
+        $this->authorizeRecord($request, $route);
 
         return response()->json([
             'data' => $route->versions()->orderBy('version_number', 'desc')->get(),

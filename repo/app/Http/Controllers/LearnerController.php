@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Http\Requests\LearnerRequest;
 use App\Http\Resources\LearnerResource;
 use App\Models\Learner;
@@ -11,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class LearnerController extends Controller
 {
+    use AuthorizesRecordAccess;
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Learner::with('identifiers');
@@ -62,9 +64,10 @@ class LearnerController extends Controller
         ], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $learner = Learner::with('identifiers')->findOrFail($id);
+        $this->authorizeRecord($request, $learner);
 
         return response()->json([
             'data' => new LearnerResource($learner),
@@ -74,6 +77,7 @@ class LearnerController extends Controller
     public function update(LearnerRequest $request, int $id): JsonResponse
     {
         $learner = Learner::findOrFail($id);
+        $this->authorizeMutation($request, $learner);
         $learner->update($request->validated());
         $learner->load('identifiers');
 
@@ -83,9 +87,10 @@ class LearnerController extends Controller
         ]);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
         $learner = Learner::findOrFail($id);
+        $this->authorizeMutation($request, $learner);
         $learner->delete();
 
         return response()->json([
