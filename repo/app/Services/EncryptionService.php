@@ -53,7 +53,7 @@ class EncryptionService
         $domain = $parts[1];
 
         $visible = min(2, strlen($local));
-        $masked = substr($local, 0, $visible) . str_repeat('*', max(3, strlen($local) - $visible));
+        $masked = substr($local, 0, $visible) . str_repeat('*', 3);
 
         return $masked . '@' . $domain;
     }

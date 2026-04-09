@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Services\DataNormalizationService;
 use App\Services\DeduplicationService;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DeduplicationTest extends TestCase
 {

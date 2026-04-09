@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Booking;
 use App\Models\WaitlistEntry;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class BookingRulesTest extends TestCase
 {

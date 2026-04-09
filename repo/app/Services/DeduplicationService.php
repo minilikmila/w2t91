@@ -186,13 +186,13 @@ class DeduplicationService
      */
     public function resolveDuplicate(int $identifierId, string $resolution): LearnerIdentifier
     {
-        $identifier = LearnerIdentifier::findOrFail($identifierId);
-
         $validResolutions = ['confirmed_duplicate', 'not_duplicate', 'merged'];
 
         if (!in_array($resolution, $validResolutions)) {
             throw new \InvalidArgumentException("Invalid resolution: {$resolution}. Must be one of: " . implode(', ', $validResolutions));
         }
+
+        $identifier = LearnerIdentifier::findOrFail($identifierId);
 
         $identifier->update([
             'duplicate_status' => $resolution,

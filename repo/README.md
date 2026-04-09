@@ -31,11 +31,11 @@ If you change the Dockerfile, rebuild with `docker compose up -d --build`.
 
 ## Docker Services
 
-| Service | Container | Port | Description |
-|---------|-----------|------|-------------|
-| app | eaglepoint-app | 9000 (internal) | PHP 8.2-FPM application |
-| webserver | eaglepoint-webserver | 8000 | Nginx reverse proxy |
-| mysql | eaglepoint-mysql | 3306 | MySQL 8.0 database |
+| Service   | Container            | Port            | Description             |
+| --------- | -------------------- | --------------- | ----------------------- |
+| app       | eaglepoint-app       | 9000 (internal) | PHP 8.2-FPM application |
+| webserver | eaglepoint-webserver | 8000            | Nginx reverse proxy     |
+| mysql     | eaglepoint-mysql     | 3306            | MySQL 8.0 database      |
 
 ### Useful Docker Commands
 
@@ -59,7 +59,10 @@ docker compose up -d --build
 ## Running Tests
 
 ```bash
-# Run the full test suite via the test runner
+# Run the full test suite (auto-detects Docker, starts services if needed)
+./run_tests.sh
+
+# Or run explicitly inside a running container
 docker compose exec app bash run_tests.sh
 
 # Run only PHPUnit tests
@@ -73,12 +76,14 @@ docker compose exec app php vendor/bin/phpunit API_tests/
 docker compose exec app php vendor/bin/phpunit unit_tests/DataNormalizationTest.php
 ```
 
+`./run_tests.sh` works both locally and in CI. When run outside Docker it detects `docker compose` (with fallback to `docker-compose`), ensures services are up, and executes tests inside the app container automatically.
+
 ### Test Suite Summary
 
-| Suite | Location | Tests | Covers |
-|-------|----------|-------|--------|
-| Custom Unit | `unit_tests/` | 94 | Normalization, deduplication, enrollment states, booking rules, audit chaining, encryption/masking, geofencing |
-| Custom API | `API_tests/` | 49 | Auth, permissions, learner CRUD/import, enrollment workflow, booking conflicts, location disclosure, report export |
+| Suite       | Location      | Tests | Covers                                                                                                             |
+| ----------- | ------------- | ----- | ------------------------------------------------------------------------------------------------------------------ |
+| Custom Unit | `unit_tests/` | 94    | Normalization, deduplication, enrollment states, booking rules, audit chaining, encryption/masking, geofencing     |
+| Custom API  | `API_tests/`  | 49    | Auth, permissions, learner CRUD/import, enrollment workflow, booking conflicts, location disclosure, report export |
 
 ## API Overview
 
@@ -86,20 +91,20 @@ Base URL: `http://localhost:8000/api`
 
 All protected endpoints require `Authorization: Bearer <token>`.
 
-| Group | Endpoints | Key Operations |
-|-------|-----------|----------------|
-| Auth | `/auth/login`, `/auth/logout`, `/auth/me`, `/auth/register` | Login, token issuance, profile |
-| Learners | `/learners` | CRUD, search, filter, paginate |
-| Import | `/import/learners` | Bulk CSV/XLSX import (up to 10,000 rows) |
-| Enrollments | `/enrollments`, `/enrollments/{id}/transition`, `/submit`, `/review`, `/cancel`, `/refund` | State machine workflow with approval levels |
-| Approvals | `/approvals`, `/approvals/{id}/decide`, `/claim` | Review queue with sync/async processing |
-| Bookings | `/bookings`, `/bookings/{id}/confirm`, `/cancel`, `/reschedule` | Provisional holds, conflict detection, late cancel |
-| Waitlist | `/waitlist`, `/waitlist/{id}/accept` | Position-based waitlist with offer expiry |
-| Locations | `/locations`, `/locations/nearby`, `/locations/{id}/geofence` | Role-based coordinate disclosure, Haversine sorting |
-| Exercises | `/exercises`, `/cohorts`, `/cohorts/assign` | Training exercise management, cohort publishing |
-| Attempts | `/attempts`, `/attempts/{id}/action`, `/submit` | Exercise attempts with action trails, auto-scoring |
-| Audit | `/audit`, `/audit/verify`, `/audit/entity/{type}/{id}` | Hash-chained append-only audit log |
-| Reports | `/reports`, `/reports/{id}/generate`, `/download` | Report definitions with CSV/JSON export |
+| Group       | Endpoints                                                                                  | Key Operations                                      |
+| ----------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| Auth        | `/auth/login`, `/auth/logout`, `/auth/me`, `/auth/register`                                | Login, token issuance, profile                      |
+| Learners    | `/learners`                                                                                | CRUD, search, filter, paginate                      |
+| Import      | `/import/learners`                                                                         | Bulk CSV/XLSX import (up to 10,000 rows)            |
+| Enrollments | `/enrollments`, `/enrollments/{id}/transition`, `/submit`, `/review`, `/cancel`, `/refund` | State machine workflow with approval levels         |
+| Approvals   | `/approvals`, `/approvals/{id}/decide`, `/claim`                                           | Review queue with sync/async processing             |
+| Bookings    | `/bookings`, `/bookings/{id}/confirm`, `/cancel`, `/reschedule`                            | Provisional holds, conflict detection, late cancel  |
+| Waitlist    | `/waitlist`, `/waitlist/{id}/accept`                                                       | Position-based waitlist with offer expiry           |
+| Locations   | `/locations`, `/locations/nearby`, `/locations/{id}/geofence`                              | Role-based coordinate disclosure, Haversine sorting |
+| Exercises   | `/exercises`, `/cohorts`, `/cohorts/assign`                                                | Training exercise management, cohort publishing     |
+| Attempts    | `/attempts`, `/attempts/{id}/action`, `/submit`                                            | Exercise attempts with action trails, auto-scoring  |
+| Audit       | `/audit`, `/audit/verify`, `/audit/entity/{type}/{id}`                                     | Hash-chained append-only audit log                  |
+| Reports     | `/reports`, `/reports/{id}/generate`, `/download`                                          | Report definitions with CSV/JSON export             |
 
 See [docs/api-spec.md](docs/api-spec.md) for complete endpoint documentation.
 
@@ -126,9 +131,6 @@ database/
 └── seeders/              # Role, permission, and database seeders
 docker/
 └── nginx/                # Nginx configuration
-docs/
-├── design.md             # Architecture and design decisions
-└── api-spec.md           # Complete API specification
 routes/
 └── api.php               # All API route definitions
 tests/                    # PHPUnit base classes
@@ -139,12 +141,12 @@ run_tests.sh              # Test runner with summary output
 
 ## Roles and Permissions
 
-| Role | Description |
-|------|-------------|
-| `admin` | Full system access (27 permissions) |
-| `planner` | Learner management, scheduling, locations, reports (21 permissions) |
-| `reviewer` | Enrollment approval, audit viewing (10 permissions) |
-| `field_agent` | Field-level learner and booking access (11 permissions) |
+| Role          | Description                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| `admin`       | Full system access (27 permissions)                                 |
+| `planner`     | Learner management, scheduling, locations, reports (21 permissions) |
+| `reviewer`    | Enrollment approval, audit viewing (10 permissions)                 |
+| `field_agent` | Field-level learner and booking access (11 permissions)             |
 
 ## Documentation
 
@@ -154,24 +156,28 @@ run_tests.sh              # Test runner with summary output
 ## Verification Checklist
 
 1. **Start the application**
+
    ```bash
    docker compose up -d --build
    # .env is created from .env.example on first boot if missing
    ```
 
 2. **Verify health endpoint**
+
    ```bash
    curl http://localhost:8000/api/health
    # Expected: {"status":"ok"}
    ```
 
 3. **Run all tests**
+
    ```bash
-   docker-compose exec app bash run_tests.sh
-   # Expected: ALL PASSED with 143 tests
+   ./run_tests.sh
+   # Expected: ALL PASSED with 154 tests
    ```
 
 4. **Test authentication flow**
+
    ```bash
    # Login
    curl -X POST http://localhost:8000/api/auth/login \

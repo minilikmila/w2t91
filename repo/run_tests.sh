@@ -1,11 +1,49 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-# EaglePoint Test Runner
-# Executes all unit and API tests, captures pass/fail summary, exits nonzero on failures.
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
+
+# ---------------------------------------------------------------------------
+# If running OUTSIDE Docker, delegate to Docker Compose and exit.
+# ---------------------------------------------------------------------------
+if [ ! -f /.dockerenv ]; then
+    # Detect docker compose command (V2 plugin vs V1 standalone)
+    if docker compose version &>/dev/null; then
+        COMPOSE="docker compose"
+    elif command -v docker-compose &>/dev/null; then
+        COMPOSE="docker-compose"
+    else
+        echo "Error: Neither 'docker compose' nor 'docker-compose' found." >&2
+        exit 1
+    fi
+
+    echo "Starting Docker services..."
+    if ! $COMPOSE up -d; then
+        echo "Error: Failed to start Docker services." >&2
+        exit 1
+    fi
+
+    # Wait for vendor/autoload.php (signals composer install finished)
+    echo "Waiting for app container to be ready..."
+    RETRIES=0
+    until $COMPOSE exec -T app test -f vendor/autoload.php 2>/dev/null; do
+        RETRIES=$((RETRIES + 1))
+        if [ "$RETRIES" -ge 30 ]; then
+            echo "Error: App container not ready after 60 seconds." >&2
+            exit 1
+        fi
+        sleep 2
+    done
+
+    # Run this same script inside the container; propagate its exit code
+    $COMPOSE exec -T app bash run_tests.sh
+    exit $?
+fi
+
+# ---------------------------------------------------------------------------
+# Inside the container – run tests directly.
+# ---------------------------------------------------------------------------
 
 PASS=0
 FAIL=0
@@ -50,8 +88,9 @@ run_suite() {
     echo "--- ${suite_name} ---"
 
     local output
-    output=$(eval "$command" 2>&1) || true
-    local exit_code=${PIPESTATUS[0]:-$?}
+    local exit_code
+    output=$(eval "$command" 2>&1)
+    exit_code=$?
 
     echo "$output"
     echo ""

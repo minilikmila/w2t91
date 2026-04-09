@@ -31,7 +31,11 @@ trait AuditsTimestamps
         });
 
         static::deleted(function ($model) {
-            $eventType = $model->isForceDeleting() ? 'force_deleted' : 'soft_deleted';
+            $usesSoftDeletes = in_array(
+                \Illuminate\Database\Eloquent\SoftDeletes::class,
+                class_uses_recursive($model)
+            );
+            $eventType = ($usesSoftDeletes && !$model->isForceDeleting()) ? 'soft_deleted' : 'force_deleted';
             $model->recordAuditEvent($eventType, $model->getAttributes(), null);
         });
     }
@@ -65,11 +69,4 @@ trait AuditsTimestamps
         }
     }
 
-    /**
-     * Check if this is a force delete (not soft delete).
-     */
-    protected function isForceDeleting(): bool
-    {
-        return property_exists($this, 'forceDeleting') && $this->forceDeleting;
-    }
 }
