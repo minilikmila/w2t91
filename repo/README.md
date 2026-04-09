@@ -66,10 +66,14 @@ docker compose up -d --build
 # Or run explicitly inside a running container
 docker compose exec app bash run_tests.sh
 
-# Run only PHPUnit tests
+# Run all PHPUnit suites (includes custom suites registered in phpunit.xml)
 docker compose exec app php artisan test
 
-# Run specific test suites
+# Run specific test suites by name
+docker compose exec app php artisan test --testsuite=CustomUnit
+docker compose exec app php artisan test --testsuite=CustomAPI
+
+# Or run by directory
 docker compose exec app php vendor/bin/phpunit unit_tests/
 docker compose exec app php vendor/bin/phpunit API_tests/
 
@@ -83,8 +87,8 @@ docker compose exec app php vendor/bin/phpunit unit_tests/DataNormalizationTest.
 
 | Suite       | Location      | Tests | Covers                                                                                                                                              |
 | ----------- | ------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Custom Unit | `unit_tests/` | 127   | Normalization, deduplication, enrollment states, booking rules/versioning, audit chaining/tamper detection, encryption/masking, geofencing, password policy |
-| Custom API  | `API_tests/`  | 79    | Auth, permissions, authorization, learner CRUD/search/import, enrollment workflow/transitions, approvals, booking conflicts, location disclosure, resources/schedules/routes, reports |
+| Custom Unit | `unit_tests/` | 151   | Normalization, deduplication, enrollment states, booking rules/versioning, audit chaining/tamper detection, encryption/masking, geofencing, password policy, approval role enforcement, waitlist lifecycle, log redaction |
+| Custom API  | `API_tests/`  | 111   | Auth, permissions, authorization, learner CRUD/search/import, enrollment workflow/transitions, approvals, booking conflicts, location disclosure, resources/schedules/routes, reports, object authorization, waitlist lifecycle/backfill |
 
 ## API Overview
 
@@ -104,6 +108,9 @@ All protected endpoints require `Authorization: Bearer <token>`.
 | Locations   | `/locations`, `/locations/nearby`, `/locations/{id}/geofence`                              | Role-based coordinate disclosure, Haversine sorting |
 | Exercises   | `/exercises`, `/cohorts`, `/cohorts/assign`                                                | Training exercise management, cohort publishing     |
 | Attempts    | `/attempts`, `/attempts/{id}/action`, `/submit`                                            | Exercise attempts with action trails, auto-scoring  |
+| Placements  | `/placements`, `/placements/{id}`, `/placements/{id}/cancel`                               | Field placement assignment and lifecycle            |
+| Packages    | `/packages`, `/packages/{id}/publish`, `/packages/{id}/archive`                            | Route/group package publishing workflow             |
+| Analytics   | `/analytics/overview`, `/enrollments`, `/bookings`, `/placements`, `/operations`           | Operational metrics and back-office dashboard       |
 | Audit       | `/audit`, `/audit/verify`, `/audit/entity/{type}/{id}`                                     | Hash-chained append-only audit log                  |
 | Reports     | `/reports`, `/reports/{id}/generate`, `/download`                                          | Report definitions with CSV/JSON export             |
 
@@ -114,27 +121,27 @@ app/
 ├── Console/              # Artisan commands
 ├── Exceptions/           # Structured JSON error handling
 ├── Http/
-│   ├── Controllers/      # 10 API controllers
+│   ├── Controllers/      # 13 API controllers
 │   ├── Middleware/        # Token auth, role/permission, lockout, request logging
 │   ├── Requests/         # Form request validation
 │   └── Resources/        # JSON resource transformers with PII masking
 ├── Jobs/                 # Queue jobs (enrollment approval processing)
-├── Models/               # 16 Eloquent models with traits
+├── Models/               # 18 Eloquent models with traits
 │   └── Traits/           # EncryptsPii, AuditsTimestamps
 ├── Providers/            # Service providers
 └── Services/             # 8 business logic services
 config/                   # Application configuration
 database/
 ├── factories/            # Model factories
-├── migrations/           # 20 migration files
+├── migrations/           # 26 migration files
 └── seeders/              # Role, permission, and database seeders
 docker/
 └── nginx/                # Nginx configuration
 routes/
 └── api.php               # All API route definitions
 tests/                    # PHPUnit base classes
-unit_tests/               # 11 unit test files (127 tests)
-API_tests/                # 12 API test files (79 tests)
+unit_tests/               # 14 unit test files (151 tests)
+API_tests/                # 17 API test files (111 tests)
 run_tests.sh              # Test runner with summary output
 ```
 
@@ -167,7 +174,7 @@ run_tests.sh              # Test runner with summary output
 
    ```bash
    ./run_tests.sh
-   # Expected: ALL PASSED with 154 tests
+   # Expected: ALL PASSED with 262+ tests
    ```
 
 4. **Test authentication flow**

@@ -43,7 +43,7 @@ class AuthenticateToken
 
         $apiToken->update(['last_used_at' => now()]);
 
-        $request->merge(['api_token' => $apiToken]);
+        $request->attributes->set('api_token', $apiToken);
         $request->setUserResolver(fn () => $user);
 
         return $next($request);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\ApiToken;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -88,23 +89,13 @@ class AuthController extends Controller
             'token' => $plainToken,
             'token_type' => 'Bearer',
             'expires_at' => $apiToken->expires_at->toIso8601String(),
-            'user' => [
-                'id' => $user->id,
-                'username' => $user->username,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role ? [
-                    'name' => $user->role->name,
-                    'slug' => $user->role->slug,
-                    'permissions' => $user->role->permissions->pluck('slug'),
-                ] : null,
-            ],
+            'user' => new UserResource($user),
         ]);
     }
 
     public function logout(Request $request): JsonResponse
     {
-        $apiToken = $request->get('api_token');
+        $apiToken = $request->attributes->get('api_token');
 
         if ($apiToken) {
             $apiToken->revoke();
@@ -121,19 +112,7 @@ class AuthController extends Controller
         $user->load('role.permissions');
 
         return response()->json([
-            'user' => [
-                'id' => $user->id,
-                'username' => $user->username,
-                'name' => $user->name,
-                'email' => $user->email,
-                'is_active' => $user->is_active,
-                'last_login_at' => $user->last_login_at?->toIso8601String(),
-                'role' => $user->role ? [
-                    'name' => $user->role->name,
-                    'slug' => $user->role->slug,
-                    'permissions' => $user->role->permissions->pluck('slug'),
-                ] : null,
-            ],
+            'user' => new UserResource($user),
         ]);
     }
 
@@ -168,16 +147,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User registered successfully.',
-            'user' => [
-                'id' => $user->id,
-                'username' => $user->username,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role ? [
-                    'name' => $user->role->name,
-                    'slug' => $user->role->slug,
-                ] : null,
-            ],
+            'user' => new UserResource($user),
         ], 201);
     }
 }

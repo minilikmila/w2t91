@@ -10,6 +10,12 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <testsuite name="CustomUnit">
+            <directory>unit_tests</directory>
+        </testsuite>
+        <testsuite name="CustomAPI">
+            <directory>API_tests</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>

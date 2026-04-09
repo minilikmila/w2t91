@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Http\Requests\EnrollmentRequest;
+use App\Http\Resources\EnrollmentResource;
 use App\Models\Enrollment;
 use App\Models\Learner;
 use App\Services\EnrollmentWorkflowService;
 use App\Services\RefundService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class EnrollmentController extends Controller
 {
@@ -23,9 +25,15 @@ class EnrollmentController extends Controller
         $this->refundService = $refundService;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Enrollment::with(['learner', 'approvals', 'lastActor']);
+
+        // Scope results based on user role
+        $user = $request->user();
+        if (!$user->hasRole('admin') && !$user->hasRole('planner')) {
+            $query->where('last_actor_id', $user->id);
+        }
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
@@ -41,7 +49,7 @@ class EnrollmentController extends Controller
 
         $perPage = min((int) $request->get('per_page', 25), 100);
 
-        return response()->json($query->orderBy('created_at', 'desc')->paginate($perPage));
+        return EnrollmentResource::collection($query->orderBy('created_at', 'desc')->paginate($perPage));
     }
 
     public function store(EnrollmentRequest $request): JsonResponse
@@ -58,7 +66,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Enrollment created in draft status.',
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ], 201);
     }
@@ -69,7 +77,7 @@ class EnrollmentController extends Controller
         $this->authorizeRecord($request, $enrollment);
 
         return response()->json([
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }
@@ -100,7 +108,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => "Enrollment transitioned to '{$newStatus}'.",
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }
@@ -121,7 +129,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Enrollment submitted for review.',
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }
@@ -142,7 +150,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Review started.',
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }
@@ -181,7 +189,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Enrollment cancelled.',
-            'data' => $result['enrollment'],
+            'data' => new EnrollmentResource($result['enrollment']),
             'refund_eligible' => $result['refund_eligible'],
             'refund_reasons' => $result['refund_reasons'],
             'workflow' => $this->workflowService->getWorkflowStatus($result['enrollment']),
@@ -225,7 +233,7 @@ class EnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Refund processed successfully.',
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }

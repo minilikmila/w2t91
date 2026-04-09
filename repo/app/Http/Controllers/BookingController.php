@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\AuthorizesRecordAccess;
 use App\Http\Requests\BookingRequest;
+use App\Http\Resources\BookingResource;
+use App\Http\Resources\WaitlistResource;
 use App\Models\Booking;
 use App\Models\WaitlistEntry;
 use App\Services\BookingService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BookingController extends Controller
 {
@@ -21,9 +24,15 @@ class BookingController extends Controller
         $this->bookingService = $bookingService;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Booking::with(['resource', 'learner', 'bookedByUser']);
+
+        // Scope results based on user role
+        $user = $request->user();
+        if (!$user->hasRole('admin') && !$user->hasRole('planner')) {
+            $query->where('booked_by', $user->id);
+        }
 
         if ($request->has('resource_id')) {
             $query->where('resource_id', $request->resource_id);
@@ -43,7 +52,7 @@ class BookingController extends Controller
 
         $perPage = min((int) $request->get('per_page', 25), 100);
 
-        return response()->json($query->orderBy('start_time', 'asc')->paginate($perPage));
+        return BookingResource::collection($query->orderBy('start_time', 'asc')->paginate($perPage));
     }
 
     public function store(Request $request): JsonResponse
@@ -76,7 +85,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Provisional hold created. Confirm within 5 minutes.',
-            'data' => $booking,
+            'data' => new BookingResource($booking),
         ], 201);
     }
 
@@ -85,7 +94,7 @@ class BookingController extends Controller
         $booking = Booking::with(['resource', 'learner', 'bookedByUser'])->findOrFail($id);
         $this->authorizeRecord($request, $booking);
 
-        return response()->json(['data' => $booking]);
+        return response()->json(['data' => new BookingResource($booking)]);
     }
 
     public function confirm(Request $request, int $id): JsonResponse
@@ -106,7 +115,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Booking confirmed.',
-            'data' => $booking,
+            'data' => new BookingResource($booking),
         ]);
     }
 
@@ -132,7 +141,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Booking cancelled.',
-            'data' => $booking,
+            'data' => new BookingResource($booking),
         ]);
     }
 
@@ -163,7 +172,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Booking rescheduled.',
-            'data' => $booking,
+            'data' => new BookingResource($booking),
         ]);
     }
 
@@ -187,7 +196,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Added to waitlist.',
-            'data' => $entry,
+            'data' => new WaitlistResource($entry),
         ], 201);
     }
 
@@ -209,13 +218,25 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Waitlist offer accepted. Booking confirmed.',
-            'data' => $booking,
+            'data' => new BookingResource($booking),
         ]);
     }
 
-    public function waitlistIndex(Request $request): JsonResponse
+    public function waitlistIndex(Request $request): AnonymousResourceCollection
     {
         $query = WaitlistEntry::with(['resource', 'learner']);
+
+        // Scope results based on user role
+        $user = $request->user();
+        if (!$user->hasRole('admin') && !$user->hasRole('planner')) {
+            // Restricted roles only see waitlist entries for learners they have bookings for
+            $userId = $user->id;
+            $query->whereHas('learner', function ($lq) use ($userId) {
+                $lq->whereHas('bookings', function ($bq) use ($userId) {
+                    $bq->where('booked_by', $userId);
+                });
+            });
+        }
 
         if ($request->has('resource_id')) {
             $query->where('resource_id', $request->resource_id);
@@ -227,6 +248,6 @@ class BookingController extends Controller
 
         $perPage = min((int) $request->get('per_page', 25), 100);
 
-        return response()->json($query->orderBy('position', 'asc')->paginate($perPage));
+        return WaitlistResource::collection($query->orderBy('position', 'asc')->paginate($perPage));
     }
 }

@@ -120,6 +120,9 @@ class EnrollmentWorkflowService
      */
     public function beginReview(Enrollment $enrollment, User $reviewer): Enrollment
     {
+        // Enforce role requirement for level 1 before starting review
+        $this->enforceApprovalLevelRole($enrollment, 1, $reviewer);
+
         $enrollment = $this->transition($enrollment, Enrollment::STATUS_UNDER_REVIEW, $reviewer, 'review_started');
 
         // Create first-level approval record
@@ -145,6 +148,11 @@ class EnrollmentWorkflowService
         }
 
         $currentLevel = $enrollment->current_approval_level;
+
+        // Enforce required role for approval (not rejection — any reviewer can reject)
+        if ($decision === 'approved') {
+            $this->enforceApprovalLevelRole($enrollment, $currentLevel, $reviewer);
+        }
 
         // Find or create the approval for the current level
         $approval = Approval::where('enrollment_id', $enrollment->id)
@@ -224,6 +232,37 @@ class EnrollmentWorkflowService
     public function cancel(Enrollment $enrollment, User $actor, ?string $reason = null): Enrollment
     {
         return $this->transition($enrollment, Enrollment::STATUS_CANCELLED, $actor, 'cancelled', $reason);
+    }
+
+    /**
+     * Validate that the reviewer has the required role for the current approval level.
+     * Public so controllers can pre-check before async dispatch.
+     */
+    public function validateApprovalRole(Enrollment $enrollment, User $reviewer): void
+    {
+        $this->enforceApprovalLevelRole($enrollment, $enrollment->current_approval_level, $reviewer);
+    }
+
+    /**
+     * Enforce that the reviewer has the required role for the given approval level.
+     */
+    private function enforceApprovalLevelRole(Enrollment $enrollment, int $level, User $reviewer): void
+    {
+        $workflowMetadata = $enrollment->workflow_metadata ?? [];
+        $levelConfigs = $workflowMetadata['level_config'] ?? [];
+
+        foreach ($levelConfigs as $config) {
+            if (($config['level'] ?? null) === $level && !empty($config['required_role'])) {
+                $requiredRole = $config['required_role'];
+                if (!$reviewer->hasRole($requiredRole) && !$reviewer->hasRole('admin')) {
+                    throw new \InvalidArgumentException(
+                        "Approval level {$level} requires the '{$requiredRole}' role. " .
+                        'The current reviewer does not have the required role.'
+                    );
+                }
+                return;
+            }
+        }
     }
 
     /**

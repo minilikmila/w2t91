@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\AuthorizesRecordAccess;
+use App\Http\Resources\ApprovalResource;
+use App\Http\Resources\EnrollmentResource;
 use App\Jobs\ProcessEnrollmentApproval;
 use App\Models\Approval;
 use App\Models\Enrollment;
 use App\Services\EnrollmentWorkflowService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ApprovalController extends Controller
 {
@@ -23,9 +26,18 @@ class ApprovalController extends Controller
     /**
      * List approvals, optionally filtered by enrollment or status.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Approval::with(['enrollment.learner', 'reviewer']);
+
+        // Scope results based on user role
+        $user = $request->user();
+        if (!$user->hasRole('admin') && !$user->hasRole('planner')) {
+            $query->where(function ($q) use ($user) {
+                $q->where('reviewer_id', $user->id)
+                    ->orWhereNull('reviewer_id');
+            });
+        }
 
         if ($request->has('enrollment_id')) {
             $query->where('enrollment_id', $request->enrollment_id);
@@ -49,7 +61,7 @@ class ApprovalController extends Controller
 
         $perPage = min((int) $request->get('per_page', 25), 100);
 
-        return response()->json(
+        return ApprovalResource::collection(
             $query->orderBy('created_at', 'desc')->paginate($perPage)
         );
     }
@@ -62,7 +74,7 @@ class ApprovalController extends Controller
         $approval = Approval::with(['enrollment.learner', 'reviewer'])->findOrFail($id);
         $this->authorizeRecord($request, $approval);
 
-        return response()->json(['data' => $approval]);
+        return response()->json(['data' => new ApprovalResource($approval)]);
     }
 
     /**
@@ -93,6 +105,18 @@ class ApprovalController extends Controller
                 'error' => 'Invalid State',
                 'message' => 'The enrollment is not currently in review.',
             ], 422);
+        }
+
+        // Validate role requirement before dispatching to queue
+        if ($request->decision === 'approved') {
+            try {
+                $this->workflowService->validateApprovalRole($enrollment, $request->user());
+            } catch (\InvalidArgumentException $e) {
+                return response()->json([
+                    'error' => 'Authorization Error',
+                    'message' => $e->getMessage(),
+                ], 403);
+            }
         }
 
         // Dispatch to queue for processing
@@ -160,7 +184,7 @@ class ApprovalController extends Controller
 
         return response()->json([
             'message' => "Approval decision '{$request->decision}' processed.",
-            'data' => $enrollment,
+            'data' => new EnrollmentResource($enrollment),
             'workflow' => $this->workflowService->getWorkflowStatus($enrollment),
         ]);
     }
@@ -189,7 +213,7 @@ class ApprovalController extends Controller
 
         return response()->json([
             'message' => 'Approval claimed for review.',
-            'data' => $approval,
+            'data' => new ApprovalResource($approval),
         ]);
     }
 }

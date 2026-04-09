@@ -6,7 +6,7 @@
 
 ## 2. Scope and Static Verification Boundary
 
-- Reviewed: the prior report at `.tmp/static-audit-report.md` and the current repository state for every previously reported material issue, including modified controllers, services, models, routes, migrations, config, and affected tests.
+- Reviewed: repository structure, README and environment files, Laravel bootstrap and route registration, middleware, controllers, services, models, migrations, seeders, and static test files in `API_tests/` and `unit_tests/`.
 - Not reviewed: runtime execution, container startup, queue worker behavior, migration execution, database contents, or test execution results.
 - Intentionally not executed: project startup, Docker, PHPUnit, queue workers, HTTP requests, and migrations.
 - Manual verification required for: actual queue processing with a running worker, MySQL locking behavior under concurrent booking load, migration success for new tables/columns, and any deployment-specific behavior not proven by static code.
@@ -212,19 +212,19 @@
 
 ### 8.2 Coverage Mapping Table
 
-| Previously Reported Issue | Current Static Evidence | Mapped Test Case(s) | Coverage Assessment | Gap | Minimum Test Addition |
-| --- | --- | --- | --- | --- | --- |
-| Password minimum 12 characters | `AuthController` now requires 12 chars | None found for registration policy | Insufficient | Fix exists but is not locked by tests | Add auth registration tests for 11 vs 12 chars |
-| Enrollment statuses and transition history | `Enrollment` constants and `EnrollmentTransition` table/service writes | API_tests/EnrollmentApiTest.php:88, unit_tests/EnrollmentStateTest.php:10 | Basically covered | No test asserting transition-history rows | Add DB assertions for `enrollment_transitions` creation |
-| Booking anti-oversell / versioning | Transaction + `lockForUpdate` + version checks in `BookingService` | No new concurrency/version tests found | Insufficient | Severe concurrency defects could still regress undetected | Add contention and version-conflict tests |
-| Queue schema for approval jobs | Queue-table migration added | None found | Missing | No test or static worker deployment proof | Add queue-dispatch tests and worker/deployment documentation |
-| Resource/schedule/route API absence | New route registrations and controllers exist | None found | Missing | New endpoints are untested | Add feature tests for CRUD and route-version behavior |
-| Audit hash recomputation | `verifyChain()` recomputes `event_hash` | No updated audit-tamper test found | Insufficient | Regression could go unnoticed | Add tamper-detection unit tests |
-| PII log/debug exposure | `.env.example` debug off; request redaction expanded | None found | Insufficient | No automated guard against reintroduction | Add config/assertion tests around debug and redaction |
-| Dedup fingerprint missing last-4 phone | Dedup service now includes last-4 phone digits | No updated dedup test evidence reviewed | Insufficient | Fingerprint regression could slip | Add unit test specifically asserting last-4-phone contribution |
-| Search on encrypted learner columns | `search_email` / `search_phone` columns and query use | No updated learner-search test evidence reviewed | Insufficient | Backfill and normalization behavior untested | Add tests for stored searchable columns and search results |
-| Location distance disclosure | Exact distance hidden from non-precise roles | No new location leakage test found | Insufficient | Privacy regression could slip | Add API tests for geofence and nearby unauthorized payloads |
-| Object-level authorization | Still absent | None found | Missing | Severe defects could still pass all current tests | Add 403 tests for cross-record access on each sensitive domain |
+| Previously Reported Issue                  | Current Static Evidence                                                | Mapped Test Case(s)                                                       | Coverage Assessment | Gap                                                       | Minimum Test Addition                                          |
+| ------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------- | --------------------------------------------------------- | -------------------------------------------------------------- |
+| Password minimum 12 characters             | `AuthController` now requires 12 chars                                 | None found for registration policy                                        | Insufficient        | Fix exists but is not locked by tests                     | Add auth registration tests for 11 vs 12 chars                 |
+| Enrollment statuses and transition history | `Enrollment` constants and `EnrollmentTransition` table/service writes | API_tests/EnrollmentApiTest.php:88, unit_tests/EnrollmentStateTest.php:10 | Basically covered   | No test asserting transition-history rows                 | Add DB assertions for `enrollment_transitions` creation        |
+| Booking anti-oversell / versioning         | Transaction + `lockForUpdate` + version checks in `BookingService`     | No new concurrency/version tests found                                    | Insufficient        | Severe concurrency defects could still regress undetected | Add contention and version-conflict tests                      |
+| Queue schema for approval jobs             | Queue-table migration added                                            | None found                                                                | Missing             | No test or static worker deployment proof                 | Add queue-dispatch tests and worker/deployment documentation   |
+| Resource/schedule/route API absence        | New route registrations and controllers exist                          | None found                                                                | Missing             | New endpoints are untested                                | Add feature tests for CRUD and route-version behavior          |
+| Audit hash recomputation                   | `verifyChain()` recomputes `event_hash`                                | No updated audit-tamper test found                                        | Insufficient        | Regression could go unnoticed                             | Add tamper-detection unit tests                                |
+| PII log/debug exposure                     | `.env.example` debug off; request redaction expanded                   | None found                                                                | Insufficient        | No automated guard against reintroduction                 | Add config/assertion tests around debug and redaction          |
+| Dedup fingerprint missing last-4 phone     | Dedup service now includes last-4 phone digits                         | No updated dedup test evidence reviewed                                   | Insufficient        | Fingerprint regression could slip                         | Add unit test specifically asserting last-4-phone contribution |
+| Search on encrypted learner columns        | `search_email` / `search_phone` columns and query use                  | No updated learner-search test evidence reviewed                          | Insufficient        | Backfill and normalization behavior untested              | Add tests for stored searchable columns and search results     |
+| Location distance disclosure               | Exact distance hidden from non-precise roles                           | No new location leakage test found                                        | Insufficient        | Privacy regression could slip                             | Add API tests for geofence and nearby unauthorized payloads    |
+| Object-level authorization                 | Still absent                                                           | None found                                                                | Missing             | Severe defects could still pass all current tests         | Add 403 tests for cross-record access on each sensitive domain |
 
 ### 8.3 Security Coverage Audit
 

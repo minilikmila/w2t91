@@ -71,13 +71,18 @@ class DeduplicationService
     {
         $fingerprint = $this->generateIdentifierFingerprint($type, $value);
 
-        $identifier = LearnerIdentifier::create([
-            'learner_id' => $learner->id,
-            'type' => $type,
-            'value' => $value,
-            'fingerprint' => $fingerprint,
-            'is_primary' => $isPrimary,
-        ]);
+        // Use updateOrCreate for conflict-safe upsert against unique index
+        $identifier = LearnerIdentifier::updateOrCreate(
+            [
+                'learner_id' => $learner->id,
+                'type' => $type,
+            ],
+            [
+                'value' => $value,
+                'fingerprint' => $fingerprint,
+                'is_primary' => $isPrimary,
+            ]
+        );
 
         // Check for existing identifiers with the same fingerprint belonging to other learners
         $duplicates = LearnerIdentifier::where('fingerprint', $fingerprint)
@@ -90,6 +95,15 @@ class DeduplicationService
                 'duplicate_of_learner_id' => $duplicates->first()->learner_id,
                 'duplicate_status' => 'pending_review',
             ]);
+        } else {
+            // Clear duplicate flags if no longer a duplicate (e.g. after value change)
+            if ($identifier->is_duplicate_candidate) {
+                $identifier->update([
+                    'is_duplicate_candidate' => false,
+                    'duplicate_of_learner_id' => null,
+                    'duplicate_status' => null,
+                ]);
+            }
         }
 
         return $identifier;

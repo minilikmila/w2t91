@@ -1,16 +1,19 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\FieldPlacementController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LearnerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\RoutePackageController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SecurityTrainingController;
 use Illuminate\Support\Facades\Route;
@@ -212,4 +215,42 @@ Route::middleware(['auth.token', 'check.lockout'])->group(function () {
         ->middleware('permission:resources.manage');
     Route::get('/routes/{id}/versions', [RouteController::class, 'versions'])
         ->middleware('permission:resources.view');
+
+    // Field Placement routes
+    Route::get('/placements', [FieldPlacementController::class, 'index'])
+        ->middleware('permission:placements.view');
+    Route::post('/placements', [FieldPlacementController::class, 'store'])
+        ->middleware('permission:placements.manage');
+    Route::get('/placements/{id}', [FieldPlacementController::class, 'show'])
+        ->middleware('permission:placements.view');
+    Route::put('/placements/{id}', [FieldPlacementController::class, 'update'])
+        ->middleware('permission:placements.manage');
+    Route::post('/placements/{id}/cancel', [FieldPlacementController::class, 'cancel'])
+        ->middleware('permission:placements.manage');
+
+    // Route Package Publishing routes
+    Route::get('/packages', [RoutePackageController::class, 'index'])
+        ->middleware('permission:resources.view');
+    Route::post('/packages', [RoutePackageController::class, 'store'])
+        ->middleware('permission:resources.manage');
+    Route::get('/packages/{id}', [RoutePackageController::class, 'show'])
+        ->middleware('permission:resources.view');
+    Route::put('/packages/{id}', [RoutePackageController::class, 'update'])
+        ->middleware('permission:resources.manage');
+    Route::post('/packages/{id}/publish', [RoutePackageController::class, 'publish'])
+        ->middleware('permission:resources.manage');
+    Route::post('/packages/{id}/archive', [RoutePackageController::class, 'archive'])
+        ->middleware('permission:resources.manage');
+
+    // Analytics / Back-office routes
+    Route::get('/analytics/overview', [AnalyticsController::class, 'overview'])
+        ->middleware('permission:reports.view');
+    Route::get('/analytics/enrollments', [AnalyticsController::class, 'enrollmentMetrics'])
+        ->middleware('permission:reports.view');
+    Route::get('/analytics/bookings', [AnalyticsController::class, 'bookingMetrics'])
+        ->middleware('permission:reports.view');
+    Route::get('/analytics/placements', [AnalyticsController::class, 'placementMetrics'])
+        ->middleware('permission:reports.view');
+    Route::get('/analytics/operations', [AnalyticsController::class, 'operationalSummary'])
+        ->middleware('permission:reports.view');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Models\Booking;
 use App\Models\Enrollment;
+use App\Models\FieldPlacement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -49,7 +50,7 @@ trait AuthorizesRecordAccess
     private function userOwnsOrIsAssigned($user, Model $record): bool
     {
         // Direct user_id / created_by / booked_by ownership
-        foreach (['user_id', 'created_by', 'booked_by', 'last_actor_id', 'reviewer_id'] as $col) {
+        foreach (['user_id', 'created_by', 'booked_by', 'last_actor_id', 'reviewer_id', 'assigned_by'] as $col) {
             if (isset($record->{$col}) && (int) $record->{$col} === (int) $user->id) {
                 return true;
             }
@@ -85,7 +86,14 @@ trait AuthorizesRecordAccess
             ->where('last_actor_id', $user->id)
             ->exists();
 
-        return $hasEnrollment;
+        if ($hasEnrollment) {
+            return true;
+        }
+
+        // User assigned a field placement for this learner
+        return FieldPlacement::where('learner_id', $learnerId)
+            ->where('assigned_by', $user->id)
+            ->exists();
     }
 
     /**
@@ -105,7 +113,7 @@ trait AuthorizesRecordAccess
         }
 
         // Only the creator/owner can mutate
-        foreach (['user_id', 'created_by', 'booked_by', 'last_actor_id'] as $col) {
+        foreach (['user_id', 'created_by', 'booked_by', 'last_actor_id', 'assigned_by'] as $col) {
             if (isset($record->{$col}) && (int) $record->{$col} === (int) $user->id) {
                 return;
             }

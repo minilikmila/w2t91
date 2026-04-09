@@ -17,6 +17,7 @@ class LogRequestResponse
         'password_confirmation',
         'current_password',
         'token',
+        'api_token',
         'authorization',
         'email',
         'phone',
@@ -87,8 +88,13 @@ class LogRequestResponse
                 $sanitized[$key] = '[REDACTED]';
             } elseif (is_array($value)) {
                 $sanitized[$key] = $this->sanitizeParams($value);
-            } else {
+            } elseif (is_object($value)) {
+                // Never serialize objects (Eloquent models, tokens, etc.) into logs
+                $sanitized[$key] = '[OBJECT REDACTED]';
+            } elseif (is_scalar($value) || is_null($value)) {
                 $sanitized[$key] = $value;
+            } else {
+                $sanitized[$key] = '[REDACTED]';
             }
         }
 

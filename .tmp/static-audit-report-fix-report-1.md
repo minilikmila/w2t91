@@ -6,7 +6,7 @@
 
 ## 2. Scope and Static Verification Boundary
 
-- Reviewed: `.tmp/static-audit-report-fix-report-2.md` and the current repository state for each issue carried forward there, including modified controllers, the authorization trait, Docker/README changes, migrations, and newly added API/unit tests.
+- Reviewed: `.tmp/static-audit-report-fix-report.md` and the current repository state for each issue carried forward there, including modified controllers, the authorization trait, Docker/README changes, migrations, and newly added API/unit tests.
 - Not reviewed: runtime execution, container startup, queue worker behavior, migration execution results, database contents, or test execution results.
 - Intentionally not executed: project startup, Docker, PHPUnit, queue workers, HTTP requests, and migrations.
 - Manual verification required for: actual queue consumption in the shipped Docker deployment, MySQL locking behavior under real concurrent load, migration success against existing duplicated identifier data, and runtime access-control behavior on paths not fully covered by tests.
@@ -240,19 +240,19 @@
 
 ### 8.2 Coverage Mapping Table
 
-| Requirement / Risk Point | Mapped Test Case(s) | Key Assertion / Fixture / Mock | Coverage Assessment | Gap | Minimum Test Addition |
-| --- | --- | --- | --- | --- | --- |
-| Password minimum 12 characters | `API_tests/PasswordRegisterTest.php:45` | Direct `/api/auth/register` assertions for reject/accept | sufficient | No major static gap for this issue | Maintain feature coverage |
-| Enrollment statuses and transition history | `API_tests/EnrollmentTransitionTest.php:53` | Asserts `enrollment_transitions` rows and history creation | sufficient | Workflow-status/refund-eligibility auth paths still untested | Add 403 cases for those endpoints |
-| Booking anti-oversell / versioning | `API_tests/BookingVersionConflictApiTest.php:52` | Direct `BookingService` version-conflict and success assertions | basically covered | Still no true contention stress test | Add concurrent contention tests if needed |
-| Queue-backed approval workflow | `API_tests/ApprovalApiTest.php:121` | `decide` returns 202; worker is documented/shipped | basically covered | No runtime worker-consumption proof | Add queue fake/assert-dispatched job details or manual runbook |
-| Resource/schedule/route API coverage | `API_tests/ResourceScheduleRouteApiTest.php:51` | CRUD and route version assertions | basically covered | Denial cases still light | Add more non-admin authorization tests |
-| Audit tamper detection | `API_tests/AuditVerifyChainTest.php:54` | Direct DB tamper then `verifyChain()` assertion | sufficient | No major static gap for this issue | Maintain service-level coverage |
-| PII log/debug exposure | None found | Static middleware/config evidence only | insufficient | No automated regression guard | Add middleware/config assertions |
-| Dedup fingerprint includes last-4 phone | `unit_tests/DeduplicationFingerprintPhoneTest.php:19` | Asserts fingerprint sensitivity to last-4 phone digits | basically covered | No DB-level duplicate-collision test | Add migration/service tests for duplicate identifier insertion |
-| Search on encrypted learner columns | `API_tests/LearnerSearchTest.php:43` | Asserts `search_email`/`search_phone` population and query behavior | basically covered | Existing-row backfill still untested | Add migration/backfill test if needed |
-| Location distance disclosure | `API_tests/LocationDisclosureTest.php:61` | Exact vs coarse distance assertions by role | sufficient | None material statically | Maintain regression tests |
-| Object-level authorization | `API_tests/ObjectAuthorizationTest.php:78`, `API_tests/ObjectAuthorizationTest.php:140` | 403/200 assertions for enrollments, approvals, bookings, resources | basically covered | No coverage for list/index paths, refund-eligibility, waitlist listing, or security-training list/read scoping | Add 403/scoped-query tests for those exact endpoints |
+| Requirement / Risk Point                   | Mapped Test Case(s)                                                                     | Key Assertion / Fixture / Mock                                      | Coverage Assessment | Gap                                                                                                            | Minimum Test Addition                                          |
+| ------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Password minimum 12 characters             | `API_tests/PasswordRegisterTest.php:45`                                                 | Direct `/api/auth/register` assertions for reject/accept            | sufficient          | No major static gap for this issue                                                                             | Maintain feature coverage                                      |
+| Enrollment statuses and transition history | `API_tests/EnrollmentTransitionTest.php:53`                                             | Asserts `enrollment_transitions` rows and history creation          | sufficient          | Workflow-status/refund-eligibility auth paths still untested                                                   | Add 403 cases for those endpoints                              |
+| Booking anti-oversell / versioning         | `API_tests/BookingVersionConflictApiTest.php:52`                                        | Direct `BookingService` version-conflict and success assertions     | basically covered   | Still no true contention stress test                                                                           | Add concurrent contention tests if needed                      |
+| Queue-backed approval workflow             | `API_tests/ApprovalApiTest.php:121`                                                     | `decide` returns 202; worker is documented/shipped                  | basically covered   | No runtime worker-consumption proof                                                                            | Add queue fake/assert-dispatched job details or manual runbook |
+| Resource/schedule/route API coverage       | `API_tests/ResourceScheduleRouteApiTest.php:51`                                         | CRUD and route version assertions                                   | basically covered   | Denial cases still light                                                                                       | Add more non-admin authorization tests                         |
+| Audit tamper detection                     | `API_tests/AuditVerifyChainTest.php:54`                                                 | Direct DB tamper then `verifyChain()` assertion                     | sufficient          | No major static gap for this issue                                                                             | Maintain service-level coverage                                |
+| PII log/debug exposure                     | None found                                                                              | Static middleware/config evidence only                              | insufficient        | No automated regression guard                                                                                  | Add middleware/config assertions                               |
+| Dedup fingerprint includes last-4 phone    | `unit_tests/DeduplicationFingerprintPhoneTest.php:19`                                   | Asserts fingerprint sensitivity to last-4 phone digits              | basically covered   | No DB-level duplicate-collision test                                                                           | Add migration/service tests for duplicate identifier insertion |
+| Search on encrypted learner columns        | `API_tests/LearnerSearchTest.php:43`                                                    | Asserts `search_email`/`search_phone` population and query behavior | basically covered   | Existing-row backfill still untested                                                                           | Add migration/backfill test if needed                          |
+| Location distance disclosure               | `API_tests/LocationDisclosureTest.php:61`                                               | Exact vs coarse distance assertions by role                         | sufficient          | None material statically                                                                                       | Maintain regression tests                                      |
+| Object-level authorization                 | `API_tests/ObjectAuthorizationTest.php:78`, `API_tests/ObjectAuthorizationTest.php:140` | 403/200 assertions for enrollments, approvals, bookings, resources  | basically covered   | No coverage for list/index paths, refund-eligibility, waitlist listing, or security-training list/read scoping | Add 403/scoped-query tests for those exact endpoints           |
 
 ### 8.3 Security Coverage Audit
 
@@ -270,6 +270,6 @@
 
 ## 9. Final Notes
 
-- This is a follow-up static fix review against the issues recorded in `.tmp/static-audit-report-fix-report-2.md`, not a fresh end-to-end audit.
+- This is a follow-up static fix review against the issues recorded in `.tmp/static-audit-report-fix-report.md`, not a fresh end-to-end audit.
 - Several previously partial items are now fixed statically.
 - The main remaining open issue is still incomplete object-level authorization coverage, though it is materially narrower than in the previous fix review.

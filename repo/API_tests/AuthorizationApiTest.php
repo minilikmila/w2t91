@@ -95,8 +95,29 @@ class AuthorizationApiTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_field_agent_can_view_learner(): void
+    public function test_field_agent_cannot_view_unlinked_learner(): void
     {
+        // Field agent has no operational link (booking/enrollment) to this learner
+        $response = $this->withHeaders(['Authorization' => "Bearer {$this->fieldAgentToken}"])
+            ->getJson("/api/learners/{$this->learner->id}");
+
+        $response->assertStatus(403);
+    }
+
+    public function test_field_agent_can_view_learner_with_operational_link(): void
+    {
+        // Create a booking by the field agent to establish an operational link
+        $resource = \App\Models\Resource::create(['name' => 'Room B', 'type' => 'room', 'capacity' => 5]);
+        $startTime = now()->addDays(5)->startOfHour();
+        \App\Models\Booking::create([
+            'resource_id' => $resource->id,
+            'learner_id' => $this->learner->id,
+            'booked_by' => $this->fieldAgentUser->id,
+            'status' => 'confirmed',
+            'start_time' => $startTime,
+            'end_time' => $startTime->copy()->addHours(1),
+        ]);
+
         $response = $this->withHeaders(['Authorization' => "Bearer {$this->fieldAgentToken}"])
             ->getJson("/api/learners/{$this->learner->id}");
 
