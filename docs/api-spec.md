@@ -6,6 +6,15 @@
 http://localhost:8000/api
 ```
 
+Laravel also exposes a framework health route at `GET /up` (outside this prefix).
+
+### GET /api/health
+
+Public liveness check.
+
+**Auth**: None  
+**Response 200**: `{ "status": "ok" }`
+
 ## Authentication
 
 All protected endpoints require a Bearer token in the `Authorization` header:
@@ -173,12 +182,12 @@ Generic state transition.
 **Body**: `{ "status": "string", "reason_code": "string|null", "notes": "string|null" }`
 
 #### POST /api/enrollments/{id}/submit
-Submit for review (draft → pending_review).
+Submit for review (draft → `submitted`).
 
 **Auth**: `enrollments.update`
 
 #### POST /api/enrollments/{id}/review
-Begin review (pending_review → in_review).
+Begin review (`submitted` → `under_review`).
 
 **Auth**: `enrollments.approve`
 
@@ -202,7 +211,10 @@ Process refund for cancelled enrollment.
 #### GET /api/enrollments/{id}/refund-eligibility
 Check refund eligibility without acting.
 
-**Auth**: `enrollments.view`
+**Auth**: `enrollments.view`  
+**Response 200**: `{ "enrollment_id", "status", "payment_amount", "payment_received", "refund_cutoff_at", "cancelled_at", "eligible", "reasons" }`
+
+Enrollment statuses used by the API include: `draft`, `submitted`, `under_review`, `approved`, `rejected`, `enrolled`, `waitlisted`, `cancelled`, `completed`, `refunded`. Valid transitions are enforced server-side (`PUT /api/enrollments/{id}/transition` and the dedicated action routes above).
 
 ---
 
@@ -237,6 +249,190 @@ Synchronous approval decision.
 Claim a pending approval for review.
 
 **Auth**: `enrollments.approve`
+
+---
+
+### Resources
+
+Bookable resources (capacity, type, metadata) used by schedules and bookings.
+
+#### GET /api/resources
+List resources.
+
+**Auth**: `resources.view`  
+**Query Params**: `type`, `is_active`, `per_page` (max 100)
+
+#### POST /api/resources
+Create resource.
+
+**Auth**: `resources.manage`  
+**Body**: `{ "name": "string", "type": "string", "description": "string|null", "capacity": int|null, "is_active": bool|null, "metadata": object|null }`
+
+#### GET /api/resources/{id}
+Show resource.
+
+**Auth**: `resources.view`
+
+#### PUT /api/resources/{id}
+Update resource.
+
+**Auth**: `resources.manage`
+
+#### DELETE /api/resources/{id}
+Soft-delete resource.
+
+**Auth**: `resources.manage`
+
+---
+
+### Schedules
+
+Per-resource calendar windows and slot configuration (default slot duration 15 minutes).
+
+#### GET /api/schedules
+List schedules.
+
+**Auth**: `resources.view`  
+**Query Params**: `resource_id`, `date`, `per_page` (max 100)
+
+#### POST /api/schedules
+Create schedule.
+
+**Auth**: `resources.manage`  
+**Body**: `{ "resource_id": int, "date": "date", "start_time": "HH:MM", "end_time": "HH:MM", "slot_duration_minutes": int|null, "capacity_per_slot": int|null, "is_active": bool|null, "metadata": object|null }`
+
+#### GET /api/schedules/{id}
+Show schedule (includes related resource when loaded).
+
+**Auth**: `resources.view`
+
+#### PUT /api/schedules/{id}
+Update schedule.
+
+**Auth**: `resources.manage`
+
+#### DELETE /api/schedules/{id}
+Soft-delete schedule.
+
+**Auth**: `resources.manage`
+
+#### GET /api/schedules/{id}/slots
+Computed slot list for the schedule.
+
+**Auth**: `resources.view`  
+**Response 200**: `{ "data": [ ... ] }`
+
+---
+
+### Routes (logistics)
+
+Versioned route definitions (waypoints JSON). Each update appends a `route_versions` row with prior snapshot.
+
+#### GET /api/routes
+List routes.
+
+**Auth**: `resources.view`  
+**Query Params**: `status`, `per_page` (max 100)
+
+#### POST /api/routes
+Create route (creates initial version 1).
+
+**Auth**: `resources.manage`  
+**Body**: `{ "name": "string", "description": "string|null", "waypoints": array|null, "metadata": object|null }`
+
+#### GET /api/routes/{id}
+Show route with versions.
+
+**Auth**: `resources.view`
+
+#### PUT /api/routes/{id}
+Update route (creates next version).
+
+**Auth**: `resources.manage`  
+**Body**: `{ "name", "description", "waypoints", "metadata", "status", "change_reason" }` (partial updates supported via validation rules)
+
+#### DELETE /api/routes/{id}
+Soft-delete route.
+
+**Auth**: `resources.manage`
+
+#### GET /api/routes/{id}/versions
+List versions newest-first.
+
+**Auth**: `resources.view`
+
+---
+
+### Route packages
+
+Curated bundles of route IDs for publishing to target groups. Lifecycle: `draft` → `published` → `archived`. Only `draft` packages may be edited.
+
+#### GET /api/packages
+List packages.
+
+**Auth**: `resources.view`  
+**Query Params**: `status`, `per_page` (max 100)
+
+#### POST /api/packages
+Create draft package.
+
+**Auth**: `resources.manage`  
+**Body**: `{ "name": "string", "description": "string|null", "route_ids": [int, ...], "target_group": "string|null", "metadata": object|null }`
+
+#### GET /api/packages/{id}
+Show package.
+
+**Auth**: `resources.view`
+
+#### PUT /api/packages/{id}
+Update draft package only.
+
+**Auth**: `resources.manage`
+
+#### POST /api/packages/{id}/publish
+Publish draft (sets `published_by`, `published_at`).
+
+**Auth**: `resources.manage`
+
+#### POST /api/packages/{id}/archive
+Archive published package.
+
+**Auth**: `resources.manage`
+
+---
+
+### Field placements
+
+Learner assignments to locations. Listing is scoped: non-admin/non-planner users only see placements where they are `assigned_by`. Object-level rules in `AuthorizesRecordAccess` further restrict show/update/cancel for reviewers and field agents.
+
+#### GET /api/placements
+List placements.
+
+**Auth**: `placements.view`  
+**Query Params**: `learner_id`, `location_id`, `status`, `per_page` (max 100)
+
+#### POST /api/placements
+Create placement (`status` starts as `pending`).
+
+**Auth**: `placements.manage`  
+**Body**: `{ "learner_id": int, "location_id": int, "start_date": "date", "end_date": "date|null", "notes": "string|null", "metadata": object|null }`
+
+#### GET /api/placements/{id}
+Show placement.
+
+**Auth**: `placements.view`
+
+#### PUT /api/placements/{id}
+Update placement.
+
+**Auth**: `placements.manage`  
+**Body**: `{ "status": "pending|active|completed|cancelled|null", "start_date", "end_date", "notes" }`
+
+#### POST /api/placements/{id}/cancel
+Cancel placement (idempotent guard if already cancelled).
+
+**Auth**: `placements.manage`  
+**Body**: `{ "notes": "string|null" }`
 
 ---
 
@@ -481,18 +677,53 @@ Download generated export file.
 
 ---
 
+### Analytics
+
+Read-only aggregates for back-office dashboards. Same permission as viewing reports.
+
+#### GET /api/analytics/overview
+Counts: learners, active enrollments, confirmed bookings, active placements, pending approvals.
+
+**Auth**: `reports.view`  
+**Response 200**: `{ "data": { ... } }`
+
+#### GET /api/analytics/enrollments
+Enrollment totals and counts grouped by `status`.
+
+**Auth**: `reports.view`  
+**Query Params**: `date_from`, `date_to` (optional, filter on `enrollments.created_at`)
+
+#### GET /api/analytics/bookings
+Booking totals and counts grouped by `status`.
+
+**Auth**: `reports.view`  
+**Query Params**: `date_from`, `date_to` (optional, filter on `bookings.start_time`), `resource_id` (optional)
+
+#### GET /api/analytics/placements
+Placement totals; counts by `status` and by `location_id`.
+
+**Auth**: `reports.view`
+
+#### GET /api/analytics/operations
+Combined operational snapshot: enrollment pipeline, booking utilization, placement coverage, approval queue counts.
+
+**Auth**: `reports.view`
+
+---
+
 ## Role-Permission Matrix
 
 | Domain | admin | planner | reviewer | field_agent |
 |--------|-------|---------|----------|-------------|
-| User management | full | view | view | - |
+| User management | full (manage + view) | view | view | - |
 | Learners | full | full | view | create/view/update |
-| Learner import | yes | yes | - | - |
+| Learner import / duplicates | yes / yes | yes / yes | - | - |
 | Enrollments | full | create/view/update/cancel | view/approve | create/view |
 | Bookings | full | full | view | create/view/update |
-| Resources | full | full | view | view |
+| Resources / schedules / routes / packages | full | full | view | view |
+| Field placements | full | full | - | view/manage (scoped) |
 | Locations (precise) | yes | yes | no | no |
 | Locations (obfuscated) | - | - | yes | yes |
 | Exercises | full | view | view | view/attempt |
-| Reports | full | full | view | - |
+| Reports & analytics | full | full | view | - |
 | Audit trail | yes | - | yes | - |

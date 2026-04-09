@@ -14,6 +14,7 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 ### Design Decisions
 
 - **Monolith over microservices**: Single Docker deployment eliminates cross-service orchestration. Laravel provides validation, ORM, middleware, jobs, and local file handling in one framework.
+- **Framework health**: Laravel registers `GET /up` for process health; the application adds `GET /api/health` for API liveness.
 - **Token-based auth**: Internally signed session tokens with server-side tracking. No external JWT libraries or OAuth providers — tokens are SHA-256 hashed random strings stored in `api_tokens`.
 - **State machine pattern**: Enrollment workflows use an explicit transition graph with guard clauses rather than a generic workflow engine.
 - **Hash-chained audit log**: Append-only `audit_events` table with SHA-256 prior-hash linking for tamper evidence without external blockchain dependencies.
@@ -25,7 +26,7 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 - 5-failure account lockout for 15 minutes with automatic reset on successful login
 - Server-side token tracking with 24-hour fixed expiration, no refresh tokens
 - Role-based access control: `admin`, `planner`, `reviewer`, `field_agent`
-- 27 granular permissions mapped to roles via `role_permission` pivot table
+- 29 granular permissions mapped to roles via `role_permission` pivot table (including resource scheduling, versioned routes, route packages, field placements, and separate `users.view` / `learners.duplicates` capabilities)
 - Middleware: `auth.token`, `role`, `permission`, `check.lockout`
 
 ### Learner Management
@@ -37,13 +38,29 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 - Response masking: admin/planner see full PII; reviewer/field_agent see masked values
 
 ### Enrollment Workflow
-- State machine: draft → pending_review → in_review → approved → enrolled → completed
+- State machine (stored `status` values): `draft` → `submitted` → `under_review` → `approved` → `enrolled` or `waitlisted`; terminal paths include `completed`, `cancelled` → `refunded`; `rejected` returns to `draft` for resubmission
 - Rejection loops back to draft for resubmission
 - Configurable 1-3 level approval workflows with conditional branching
 - Minor learners (age < 18) automatically require 2+ levels and guardian contact verification
 - Guardian contact absence blocks workflow advancement
 - Queue-based async approval processing via `ProcessEnrollmentApproval` job
 - Refund eligibility gated by: cancelled status, payment received, cutoff date
+- Transition history persisted in `enrollment_transitions` for auditing and workflow introspection
+
+### Resources, schedules, and logistics routes
+- **Resources**: bookable entities (`resources` table) with type, optional capacity, and metadata; CRUD under `resources.view` / `resources.manage`
+- **Schedules**: per-resource calendar rows with `start_time`/`end_time` (time-of-day), configurable `slot_duration_minutes` (default 15) and `capacity_per_slot`; `GET .../slots` exposes generated slots for booking rules
+- **Routes**: soft-deleted route records with JSON `waypoints`; each update snapshots prior state into `route_versions` with monotonic `version_number` and optional `change_reason`
+- **Route packages**: `route_packages` bundles `route_ids` for a target audience; status workflow `draft` → `published` → `archived`; publish records `published_by` / `published_at`
+
+### Field placements
+- Assigns a learner to a location for a date range (`field_placements`), with `assigned_by` set from the authenticated user on create
+- Status values: `pending`, `active`, `completed`, `cancelled`
+- Listing scoped for non-admin/non-planner roles to rows they assigned; `AuthorizesRecordAccess` applies object-level read/mutation rules for reviewers and field agents (aligned with bookings/enrollments ownership patterns)
+
+### Analytics
+- Read-only JSON metrics under `/api/analytics/*`, gated by `reports.view`
+- Overview counters, enrollment/booking/placement breakdowns, and a combined operational summary for pipeline and queue visibility
 
 ### Scheduling / Booking
 - Resource and schedule modeling with configurable slot duration (default 15 min)
@@ -107,10 +124,10 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 ### Enrollment Workflow Flow
 1. Enrollment created in `draft` via `POST /api/enrollments`
 2. `ApprovalWorkflow::buildDefault()` evaluates learner age and guardian contact
-3. Submit → pending_review → in_review (creates approval record)
+3. Submit → `submitted` → begin review → `under_review` (creates/updates approval records)
 4. Reviewer decides via sync or async (queue job) endpoint
 5. Multi-level: approved at current level → next level created; all approved → `approved` status
-6. Approved → enrolled or waitlisted; enrolled → completed or cancelled; cancelled → refunded (if eligible)
+6. Approved → `enrolled` or `waitlisted`; enrolled → completed or cancelled; cancelled → refunded (if eligible)
 
 ### Booking Flow
 1. `POST /api/bookings` creates provisional hold (5-min expiry)
@@ -130,7 +147,7 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 ### Core Tables
 - `users` — authentication, role FK, lockout fields, soft deletes
 - `roles` — admin, planner, reviewer, field_agent
-- `permissions` — 27 granular permissions
+- `permissions` — 29 granular permissions (seeded via `PermissionSeeder`)
 - `role_permission` — pivot table
 - `api_tokens` — server-side token storage with expiry
 
@@ -138,12 +155,15 @@ EaglePoint is a monolithic Laravel 11 API backend with a layered internal struct
 - `learners` — profiles with encrypted PII, fingerprint, soft deletes
 - `learner_identifiers` — type/value pairs with duplicate candidate tracking
 - `enrollments` — state machine status, workflow metadata JSON, payment/refund fields
+- `enrollment_transitions` — append-only transition log for enrollments
 - `approvals` — per-level review records
 - `resources` — bookable entities with capacity
-- `schedules` — time slots per resource
+- `schedules` — per-day windows per resource with slot duration and capacity-per-slot
 - `bookings` — provisional/confirmed with idempotency key, version, hold expiry
 - `waitlist_entries` — position-ordered with offer expiry
 - `locations` — lat/lng with display address, soft deletes
+- `field_placements` — learner–location assignments with status and `assigned_by`
+- `route_packages` — grouped route IDs with draft/published/archived lifecycle
 - `routes` / `route_versions` — versioned route data with prior values
 - `security_exercises` — configurable exercises with scoring rules
 - `exercise_attempts` — learner attempts with action trail JSON

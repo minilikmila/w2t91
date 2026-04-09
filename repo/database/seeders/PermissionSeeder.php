@@ -57,6 +57,10 @@ class PermissionSeeder extends Seeder
 
             // Audit
             ['name' => 'View Audit Trail', 'slug' => 'audit.view', 'description' => 'Query and view audit event logs.'],
+
+            // Field placements
+            ['name' => 'View Field Placements', 'slug' => 'placements.view', 'description' => 'View learner field placement assignments.'],
+            ['name' => 'Manage Field Placements', 'slug' => 'placements.manage', 'description' => 'Create, update, and cancel field placements.'],
         ];
 
         foreach ($permissions as &$permission) {
@@ -78,6 +82,7 @@ class PermissionSeeder extends Seeder
                 'exercises.manage', 'exercises.view', 'exercises.attempt',
                 'reports.manage', 'reports.view',
                 'audit.view',
+                'placements.view', 'placements.manage',
             ],
             'planner' => [
                 'users.view',
@@ -88,6 +93,7 @@ class PermissionSeeder extends Seeder
                 'locations.manage', 'locations.view', 'locations.view_precise',
                 'exercises.view',
                 'reports.manage', 'reports.view',
+                'placements.view', 'placements.manage',
             ],
             'reviewer' => [
                 'users.view',
@@ -107,6 +113,7 @@ class PermissionSeeder extends Seeder
                 'resources.view',
                 'locations.view',
                 'exercises.view', 'exercises.attempt',
+                'placements.view', 'placements.manage',
             ],
         ];
 
