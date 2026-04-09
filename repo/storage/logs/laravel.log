@@ -1,0 +1,11 @@
+[2026-04-08 23:44:01] local.INFO: GET /api/health → 200 (40.66ms) {"method":"GET","path":"api/health","status":200,"duration_ms":40.66,"ip":"172.18.0.1","user_id":null,"user_agent":"curl/8.7.1"} 
+[2026-04-08 23:46:32] local.INFO: GET /api/health → 200 (29.65ms) {"method":"GET","path":"api/health","status":200,"duration_ms":29.65,"ip":"172.19.0.1","user_id":null,"user_agent":"curl/8.7.1"} 
+[2026-04-09 00:00:42] local.INFO: GET /api/health → 200 (41.09ms) {"method":"GET","path":"api/health","status":200,"duration_ms":41.09,"ip":"172.23.0.1","user_id":null,"user_agent":"curl/8.7.1"} 
+[2026-04-09 00:01:00] testing.ERROR: Trait method App\Models\Traits\AuditsTimestamps::isForceDeleting has not been applied as App\Models\User::isForceDeleting, because of collision with Illuminate\Database\Eloquent\SoftDeletes::isForceDeleting {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Trait method App\\Models\\Traits\\AuditsTimestamps::isForceDeleting has not been applied as App\\Models\\User::isForceDeleting, because of collision with Illuminate\\Database\\Eloquent\\SoftDeletes::isForceDeleting at /var/www/app/Models/User.php:12)
+[stacktrace]
+#0 {main}
+"} 
+[2026-04-09 00:02:10] testing.ERROR: Trait method App\Models\Traits\AuditsTimestamps::isForceDeleting has not been applied as App\Models\User::isForceDeleting, because of collision with Illuminate\Database\Eloquent\SoftDeletes::isForceDeleting {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Trait method App\\Models\\Traits\\AuditsTimestamps::isForceDeleting has not been applied as App\\Models\\User::isForceDeleting, because of collision with Illuminate\\Database\\Eloquent\\SoftDeletes::isForceDeleting at /var/www/app/Models/User.php:12)
+[stacktrace]
+#0 {main}
+"} 

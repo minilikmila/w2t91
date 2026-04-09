@@ -1,0 +1,29 @@
+# VCS / editor
+.git
+**/.DS_Store
+.idea
+.vscode
+.fleet
+.phpactor.json
+
+# Secrets (use env / compose at runtime)
+.env
+.env.*
+!.env.example
+
+# Installed deps (image runs composer install)
+/vendor
+/node_modules
+
+# Compiled / volatile Laravel files (keep directories / .gitkeep)
+/bootstrap/cache/*.php
+/storage/*.key
+/storage/**/*.log
+
+# Test / CI artifacts
+.phpunit.cache
+.phpunit.result.cache
+coverage
+
+# Local tooling
+.claude
