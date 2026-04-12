@@ -7,7 +7,7 @@ cd "$SCRIPT_DIR"
 # ---------------------------------------------------------------------------
 # If running OUTSIDE Docker, delegate to Docker Compose and exit.
 # ---------------------------------------------------------------------------
-if [ ! -f /.dockerenv ]; then
+if [ ! -f /.dockerenv ] || [ ! -f vendor/autoload.php ]; then
     # Detect docker compose command (V2 plugin vs V1 standalone)
     if docker compose version &>/dev/null; then
         COMPOSE="docker compose"

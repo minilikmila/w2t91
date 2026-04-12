@@ -36,7 +36,7 @@ services:
     container_name: eaglepoint-worker
     restart: unless-stopped
     working_dir: /var/www
-    entrypoint: []
+    entrypoint: ["/usr/local/bin/worker-entrypoint.sh"]
     command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
     environment:
       DB_CONNECTION: mysql

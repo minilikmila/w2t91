@@ -2719,3 +2719,499 @@
 #27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #28 {main}
 "} 
+[2026-04-11 17:01:31] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#19 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#21 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+"} 
+[2026-04-11 17:01:31] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#19 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#21 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+"} 
+[2026-04-11 17:01:32] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#19 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#21 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+"} 
+[2026-04-11 17:01:34] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#19 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#21 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+"} 
+[2026-04-11 17:01:37] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#19 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#21 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(139): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+"} 
+[2026-04-12 19:04:24] local.INFO: GET /api/health → 200 (30.6ms) {"method":"GET","path":"api/health","status":200,"duration_ms":30.6,"ip":"172.25.0.1","user_id":null,"user_agent":"curl/8.7.1"} 
+[2026-04-12 19:05:04] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist (Connection: mysql, SQL: select * from `cache` where `key` in (eaglepoint_cache_illuminate:queue:restart)) at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(703): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(309): Illuminate\\Queue\\Worker->queueShouldRestart(NULL)
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(194): Illuminate\\Queue\\Worker->stopIfNecessary(Object(Illuminate\\Queue\\WorkerOptions), NULL, 58080.011478544, 0, NULL)
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#21 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#23 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#25 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'eaglepoint.cache' doesn't exist at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare('select * from `...')
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(130): Illuminate\\Database\\Query\\Builder->get()
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(105): Illuminate\\Cache\\DatabaseStore->many(Array)
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(117): Illuminate\\Cache\\DatabaseStore->get('illuminate:queu...')
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(714): Illuminate\\Cache\\Repository->get('illuminate:queu...')
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(703): Illuminate\\Queue\\Worker->getTimestampOfLastQueueRestart()
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(309): Illuminate\\Queue\\Worker->queueShouldRestart(NULL)
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(194): Illuminate\\Queue\\Worker->stopIfNecessary(Object(Illuminate\\Queue\\WorkerOptions), NULL, 58080.011478544, 0, NULL)
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(149): Illuminate\\Queue\\Worker->daemon('database', 'default', Object(Illuminate\\Queue\\WorkerOptions))
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(132): Illuminate\\Queue\\Console\\WorkCommand->runWorker('database', 'default')
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#21 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#23 /var/www/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#25 /var/www/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 /var/www/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Queue\\Console\\WorkCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 /var/www/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /var/www/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 {main}
+"} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments → 201 (69.2ms) {"method":"POST","path":"api/enrollments","status":201,"duration_ms":69.2,"ip":"127.0.0.1","user_id":1,"user_agent":"Symfony","params":{"learner_id":1,"program_name":"Approval Test Program"}} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments/1/submit → 200 (5.79ms) {"method":"POST","path":"api/enrollments/1/submit","status":200,"duration_ms":5.79,"ip":"127.0.0.1","user_id":1,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments/1/review → 200 (6.16ms) {"method":"POST","path":"api/enrollments/1/review","status":200,"duration_ms":6.16,"ip":"127.0.0.1","user_id":1,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/approvals/1/decide-sync → 200 (8ms) {"method":"POST","path":"api/approvals/1/decide-sync","status":200,"duration_ms":8.0,"ip":"127.0.0.1","user_id":1,"user_agent":"Symfony","params":{"decision":"approved"}} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments → 201 (7.44ms) {"method":"POST","path":"api/enrollments","status":201,"duration_ms":7.44,"ip":"127.0.0.1","user_id":2,"user_agent":"Symfony","params":{"learner_id":2,"program_name":"Rejection Test Program"}} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments/2/submit → 200 (4.71ms) {"method":"POST","path":"api/enrollments/2/submit","status":200,"duration_ms":4.71,"ip":"127.0.0.1","user_id":2,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/enrollments/2/review → 200 (6.53ms) {"method":"POST","path":"api/enrollments/2/review","status":200,"duration_ms":6.53,"ip":"127.0.0.1","user_id":2,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:07] testing.INFO: POST /api/approvals/2/decide-sync → 200 (6.56ms) {"method":"POST","path":"api/approvals/2/decide-sync","status":200,"duration_ms":6.56,"ip":"127.0.0.1","user_id":2,"user_agent":"Symfony","params":{"decision":"rejected"}} 
+[2026-04-12 19:05:08] testing.INFO: ProcessEnrollmentApproval: Enrollment 3 processed with decision 'approved' by reviewer 3.  
+[2026-04-12 19:05:08] testing.INFO: POST /api/approvals/3/decide → 202 (86.27ms) {"method":"POST","path":"api/approvals/3/decide","status":202,"duration_ms":86.27,"ip":"127.0.0.1","user_id":3,"user_agent":"Symfony","params":{"decision":"approved"}} 
+[2026-04-12 19:05:08] testing.INFO: POST /api/approvals/4/claim → 200 (5.61ms) {"method":"POST","path":"api/approvals/4/claim","status":200,"duration_ms":5.61,"ip":"127.0.0.1","user_id":4,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:08] testing.WARNING: POST /api/approvals/5/decide-sync → 422 (3.76ms) {"method":"POST","path":"api/approvals/5/decide-sync","status":422,"duration_ms":3.76,"ip":"127.0.0.1","user_id":5,"user_agent":"Symfony","params":{"decision":"approved"}} 
+[2026-04-12 19:05:09] testing.INFO: POST /api/auth/login → 200 (239.9ms) {"method":"POST","path":"api/auth/login","status":200,"duration_ms":239.9,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:09] testing.WARNING: POST /api/auth/login → 401 (232.24ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":232.24,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:10] testing.WARNING: POST /api/auth/login → 401 (1.1ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":1.1,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"nobody","password":"[REDACTED]"}} 
+[2026-04-12 19:05:10] testing.WARNING: POST /api/auth/login → 401 (225.82ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":225.82,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:10] testing.WARNING: POST /api/auth/login → 401 (226.89ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":226.89,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:11] testing.WARNING: POST /api/auth/login → 401 (225.98ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":225.98,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:11] testing.WARNING: POST /api/auth/login → 401 (227.12ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":227.12,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:11] testing.WARNING: POST /api/auth/login → 401 (231.78ms) {"method":"POST","path":"api/auth/login","status":401,"duration_ms":231.78,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:11] testing.WARNING: POST /api/auth/login → 423 (0.55ms) {"method":"POST","path":"api/auth/login","status":423,"duration_ms":0.55,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":{"username":"admin","password":"[REDACTED]"}} 
+[2026-04-12 19:05:11] testing.INFO: POST /api/auth/logout → 200 (2.58ms) {"method":"POST","path":"api/auth/logout","status":200,"duration_ms":2.58,"ip":"127.0.0.1","user_id":10,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:12] testing.INFO: GET /api/auth/me → 200 (6.27ms) {"method":"GET","path":"api/auth/me","status":200,"duration_ms":6.27,"ip":"127.0.0.1","user_id":11,"user_agent":"Symfony"} 
+[2026-04-12 19:05:12] testing.WARNING: GET /api/auth/me → 401 (0.3ms) {"method":"GET","path":"api/auth/me","status":401,"duration_ms":0.3,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony"} 
+[2026-04-12 19:05:12] testing.WARNING: GET /api/auth/me → 401 (0.71ms) {"method":"GET","path":"api/auth/me","status":401,"duration_ms":0.71,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony"} 
+[2026-04-12 19:05:13] testing.WARNING: POST /api/auth/login → 422 (7.09ms) {"method":"POST","path":"api/auth/login","status":422,"duration_ms":7.09,"ip":"127.0.0.1","user_id":null,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:13] testing.INFO: GET /api/learners/6 → 200 (8.62ms) {"method":"GET","path":"api/learners/6","status":200,"duration_ms":8.62,"ip":"127.0.0.1","user_id":15,"user_agent":"Symfony"} 
+[2026-04-12 19:05:14] testing.WARNING: GET /api/learners/7 → 403 (8.04ms) {"method":"GET","path":"api/learners/7","status":403,"duration_ms":8.04,"ip":"127.0.0.1","user_id":18,"user_agent":"Symfony"} 
+[2026-04-12 19:05:14] testing.INFO: GET /api/learners/8 → 200 (3.6ms) {"method":"GET","path":"api/learners/8","status":200,"duration_ms":3.6,"ip":"127.0.0.1","user_id":20,"user_agent":"Symfony"} 
+[2026-04-12 19:05:14] testing.WARNING: DELETE /api/learners/9 → 403 (1.93ms) {"method":"DELETE","path":"api/learners/9","status":403,"duration_ms":1.93,"ip":"127.0.0.1","user_id":22,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:15] testing.INFO: POST /api/bookings/6/cancel → 200 (9.97ms) {"method":"POST","path":"api/bookings/6/cancel","status":200,"duration_ms":9.97,"ip":"127.0.0.1","user_id":23,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:15] testing.WARNING: POST /api/bookings/7/cancel → 403 (1.95ms) {"method":"POST","path":"api/bookings/7/cancel","status":403,"duration_ms":1.95,"ip":"127.0.0.1","user_id":26,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:16] testing.WARNING: POST /api/resources → 403 (2.83ms) {"method":"POST","path":"api/resources","status":403,"duration_ms":2.83,"ip":"127.0.0.1","user_id":28,"user_agent":"Symfony","params":{"name":"Unauthorized Room","type":"room","capacity":5}} 
+[2026-04-12 19:05:16] testing.INFO: POST /api/bookings → 201 (12.94ms) {"method":"POST","path":"api/bookings","status":201,"duration_ms":12.94,"ip":"127.0.0.1","user_id":29,"user_agent":"Symfony","params":{"resource_id":9,"learner_id":13,"start_time":"2026-04-12T22:00:00+00:00","end_time":"2026-04-12T22:30:00+00:00"}} 
+[2026-04-12 19:05:17] testing.INFO: POST /api/bookings/10/confirm → 200 (6.24ms) {"method":"POST","path":"api/bookings/10/confirm","status":200,"duration_ms":6.24,"ip":"127.0.0.1","user_id":30,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:17] testing.WARNING: POST /api/bookings → 422 (6.76ms) {"method":"POST","path":"api/bookings","status":422,"duration_ms":6.76,"ip":"127.0.0.1","user_id":31,"user_agent":"Symfony","params":{"resource_id":11,"learner_id":15,"start_time":"2026-04-12T22:00:00+00:00","end_time":"2026-04-12T22:30:00+00:00"}} 
+[2026-04-12 19:05:17] testing.INFO: POST /api/bookings/12/cancel → 200 (8.44ms) {"method":"POST","path":"api/bookings/12/cancel","status":200,"duration_ms":8.44,"ip":"127.0.0.1","user_id":32,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:18] testing.INFO: POST /api/bookings/13/cancel → 200 (5.36ms) {"method":"POST","path":"api/bookings/13/cancel","status":200,"duration_ms":5.36,"ip":"127.0.0.1","user_id":33,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:18] testing.INFO: POST /api/bookings → 201 (14.73ms) {"method":"POST","path":"api/bookings","status":201,"duration_ms":14.73,"ip":"127.0.0.1","user_id":34,"user_agent":"Symfony","params":{"resource_id":14,"learner_id":18,"start_time":"2026-04-12T22:00:00+00:00","end_time":"2026-04-12T22:30:00+00:00","idempotency_key":"unique-key-123"}} 
+[2026-04-12 19:05:18] testing.INFO: POST /api/bookings → 201 (34.3ms) {"method":"POST","path":"api/bookings","status":201,"duration_ms":34.3,"ip":"127.0.0.1","user_id":34,"user_agent":"Symfony","params":{"resource_id":14,"learner_id":18,"start_time":"2026-04-12T22:00:00+00:00","end_time":"2026-04-12T22:30:00+00:00","idempotency_key":"unique-key-123"}} 
+[2026-04-12 19:05:18] testing.INFO: GET /api/bookings → 200 (8.02ms) {"method":"GET","path":"api/bookings","status":200,"duration_ms":8.02,"ip":"127.0.0.1","user_id":35,"user_agent":"Symfony"} 
+[2026-04-12 19:05:19] testing.INFO: POST /api/waitlist → 201 (29.75ms) {"method":"POST","path":"api/waitlist","status":201,"duration_ms":29.75,"ip":"127.0.0.1","user_id":36,"user_agent":"Symfony","params":{"resource_id":16,"learner_id":20,"start_time":"2026-04-12T22:00:00+00:00","end_time":"2026-04-12T22:30:00+00:00"}} 
+[2026-04-12 19:05:20] testing.INFO: POST /api/enrollments → 201 (6.94ms) {"method":"POST","path":"api/enrollments","status":201,"duration_ms":6.94,"ip":"127.0.0.1","user_id":41,"user_agent":"Symfony","params":{"learner_id":25,"program_name":"Test Program"}} 
+[2026-04-12 19:05:20] testing.INFO: POST /api/enrollments → 201 (6.54ms) {"method":"POST","path":"api/enrollments","status":201,"duration_ms":6.54,"ip":"127.0.0.1","user_id":42,"user_agent":"Symfony","params":{"learner_id":27,"program_name":"Youth Program"}} 
+[2026-04-12 19:05:21] testing.INFO: POST /api/enrollments/8/submit → 200 (16.23ms) {"method":"POST","path":"api/enrollments/8/submit","status":200,"duration_ms":16.23,"ip":"127.0.0.1","user_id":43,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:21] testing.WARNING: PUT /api/enrollments/9/transition → 422 (3.39ms) {"method":"PUT","path":"api/enrollments/9/transition","status":422,"duration_ms":3.39,"ip":"127.0.0.1","user_id":44,"user_agent":"Symfony","params":{"status":"enrolled"}} 
+[2026-04-12 19:05:21] testing.INFO: GET /api/enrollments → 200 (5.9ms) {"method":"GET","path":"api/enrollments","status":200,"duration_ms":5.9,"ip":"127.0.0.1","user_id":45,"user_agent":"Symfony"} 
+[2026-04-12 19:05:21] testing.INFO: GET /api/enrollments → 200 (4.58ms) {"method":"GET","path":"api/enrollments","status":200,"duration_ms":4.58,"ip":"127.0.0.1","user_id":46,"user_agent":"Symfony"} 
+[2026-04-12 19:05:22] testing.INFO: GET /api/enrollments/14/workflow → 200 (3.06ms) {"method":"GET","path":"api/enrollments/14/workflow","status":200,"duration_ms":3.06,"ip":"127.0.0.1","user_id":47,"user_agent":"Symfony"} 
+[2026-04-12 19:05:22] testing.INFO: POST /api/enrollments/15/cancel → 200 (8.04ms) {"method":"POST","path":"api/enrollments/15/cancel","status":200,"duration_ms":8.04,"ip":"127.0.0.1","user_id":48,"user_agent":"Symfony","params":{"reason":"Student withdrew"}} 
+[2026-04-12 19:05:22] testing.INFO: GET /api/enrollments/16/refund-eligibility → 200 (3.8ms) {"method":"GET","path":"api/enrollments/16/refund-eligibility","status":200,"duration_ms":3.8,"ip":"127.0.0.1","user_id":49,"user_agent":"Symfony"} 
+[2026-04-12 19:05:22] testing.INFO: POST /api/enrollments/17/submit → 200 (5.24ms) {"method":"POST","path":"api/enrollments/17/submit","status":200,"duration_ms":5.24,"ip":"127.0.0.1","user_id":50,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:23] testing.INFO: POST /api/enrollments/18/cancel → 200 (6.63ms) {"method":"POST","path":"api/enrollments/18/cancel","status":200,"duration_ms":6.63,"ip":"127.0.0.1","user_id":51,"user_agent":"Symfony","params":{"reason":"Withdrawal"}} 
+[2026-04-12 19:05:23] testing.INFO: POST /api/enrollments/19/submit → 200 (4.64ms) {"method":"POST","path":"api/enrollments/19/submit","status":200,"duration_ms":4.64,"ip":"127.0.0.1","user_id":52,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:23] testing.INFO: POST /api/enrollments/20/submit → 200 (7.9ms) {"method":"POST","path":"api/enrollments/20/submit","status":200,"duration_ms":7.9,"ip":"127.0.0.1","user_id":53,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:23] testing.INFO: POST /api/enrollments/20/review → 200 (9.66ms) {"method":"POST","path":"api/enrollments/20/review","status":200,"duration_ms":9.66,"ip":"127.0.0.1","user_id":53,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:24] testing.INFO: POST /api/learners → 201 (21.35ms) {"method":"POST","path":"api/learners","status":201,"duration_ms":21.35,"ip":"127.0.0.1","user_id":54,"user_agent":"Symfony","params":{"first_name":"[REDACTED]","last_name":"[REDACTED]","email":"[REDACTED]","date_of_birth":"[REDACTED]"}} 
+[2026-04-12 19:05:24] testing.WARNING: POST /api/learners → 422 (4.54ms) {"method":"POST","path":"api/learners","status":422,"duration_ms":4.54,"ip":"127.0.0.1","user_id":56,"user_agent":"Symfony","params":{"email":"[REDACTED]"}} 
+[2026-04-12 19:05:25] testing.INFO: GET /api/learners → 200 (3.8ms) {"method":"GET","path":"api/learners","status":200,"duration_ms":3.8,"ip":"127.0.0.1","user_id":58,"user_agent":"Symfony"} 
+[2026-04-12 19:05:25] testing.INFO: GET /api/learners/42 → 200 (3.13ms) {"method":"GET","path":"api/learners/42","status":200,"duration_ms":3.13,"ip":"127.0.0.1","user_id":60,"user_agent":"Symfony"} 
+[2026-04-12 19:05:26] testing.INFO: PUT /api/learners/43 → 200 (10.96ms) {"method":"PUT","path":"api/learners/43","status":200,"duration_ms":10.96,"ip":"127.0.0.1","user_id":62,"user_agent":"Symfony","params":{"first_name":"[REDACTED]"}} 
+[2026-04-12 19:05:27] testing.INFO: DELETE /api/learners/44 → 200 (24.53ms) {"method":"DELETE","path":"api/learners/44","status":200,"duration_ms":24.53,"ip":"127.0.0.1","user_id":64,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:27] testing.INFO: GET /api/learners → 200 (6.15ms) {"method":"GET","path":"api/learners","status":200,"duration_ms":6.15,"ip":"127.0.0.1","user_id":66,"user_agent":"Symfony"} 
+[2026-04-12 19:05:28] testing.WARNING: GET /api/learners/99999 → 404 (4.47ms) {"method":"GET","path":"api/learners/99999","status":404,"duration_ms":4.47,"ip":"127.0.0.1","user_id":68,"user_agent":"Symfony"} 
+[2026-04-12 19:05:28] testing.WARNING: POST /api/import/learners → 403 (3.23ms) {"method":"POST","path":"api/import/learners","status":403,"duration_ms":3.23,"ip":"127.0.0.1","user_id":71,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:28] testing.INFO: POST /api/learners → 201 (10.98ms) {"method":"POST","path":"api/learners","status":201,"duration_ms":10.98,"ip":"127.0.0.1","user_id":72,"user_agent":"Symfony","params":{"first_name":"[REDACTED]","last_name":"[REDACTED]","email":"[REDACTED]"}} 
+[2026-04-12 19:05:29] testing.INFO: POST /api/learners → 201 (9.4ms) {"method":"POST","path":"api/learners","status":201,"duration_ms":9.4,"ip":"127.0.0.1","user_id":73,"user_agent":"Symfony","params":{"first_name":"[REDACTED]","last_name":"[REDACTED]","phone":"[REDACTED]"}} 
+[2026-04-12 19:05:29] testing.INFO: GET /api/learners → 200 (3.97ms) {"method":"GET","path":"api/learners","status":200,"duration_ms":3.97,"ip":"127.0.0.1","user_id":74,"user_agent":"Symfony"} 
+[2026-04-12 19:05:29] testing.INFO: GET /api/learners → 200 (4.64ms) {"method":"GET","path":"api/learners","status":200,"duration_ms":4.64,"ip":"127.0.0.1","user_id":75,"user_agent":"Symfony"} 
+[2026-04-12 19:05:29] testing.INFO: GET /api/learners → 200 (4.45ms) {"method":"GET","path":"api/learners","status":200,"duration_ms":4.45,"ip":"127.0.0.1","user_id":76,"user_agent":"Symfony"} 
+[2026-04-12 19:05:30] testing.INFO: GET /api/locations/1 → 200 (8.78ms) {"method":"GET","path":"api/locations/1","status":200,"duration_ms":8.78,"ip":"127.0.0.1","user_id":77,"user_agent":"Symfony"} 
+[2026-04-12 19:05:30] testing.INFO: GET /api/locations/2 → 200 (3.02ms) {"method":"GET","path":"api/locations/2","status":200,"duration_ms":3.02,"ip":"127.0.0.1","user_id":80,"user_agent":"Symfony"} 
+[2026-04-12 19:05:31] testing.INFO: POST /api/locations → 201 (3.43ms) {"method":"POST","path":"api/locations","status":201,"duration_ms":3.43,"ip":"127.0.0.1","user_id":81,"user_agent":"Symfony","params":{"name":"New Shelter","type":"shelter","latitude":34.0522,"longitude":-118.2437,"display_address":"West Side"}} 
+[2026-04-12 19:05:31] testing.INFO: GET /api/locations/nearby → 200 (3.54ms) {"method":"GET","path":"api/locations/nearby","status":200,"duration_ms":3.54,"ip":"127.0.0.1","user_id":83,"user_agent":"Symfony"} 
+[2026-04-12 19:05:32] testing.INFO: GET /api/locations/6/geofence → 200 (3.15ms) {"method":"GET","path":"api/locations/6/geofence","status":200,"duration_ms":3.15,"ip":"127.0.0.1","user_id":85,"user_agent":"Symfony"} 
+[2026-04-12 19:05:32] testing.WARNING: POST /api/locations → 403 (2.28ms) {"method":"POST","path":"api/locations","status":403,"duration_ms":2.28,"ip":"127.0.0.1","user_id":88,"user_agent":"Symfony","params":{"name":"Test","type":"shelter","latitude":40,"longitude":-74}} 
+[2026-04-12 19:05:33] testing.INFO: GET /api/locations/nearby → 200 (3.51ms) {"method":"GET","path":"api/locations/nearby","status":200,"duration_ms":3.51,"ip":"127.0.0.1","user_id":90,"user_agent":"Symfony"} 
+[2026-04-12 19:05:33] testing.INFO: GET /api/locations/nearby → 200 (3ms) {"method":"GET","path":"api/locations/nearby","status":200,"duration_ms":3.0,"ip":"127.0.0.1","user_id":91,"user_agent":"Symfony"} 
+[2026-04-12 19:05:34] testing.INFO: GET /api/locations/9/geofence → 200 (3.14ms) {"method":"GET","path":"api/locations/9/geofence","status":200,"duration_ms":3.14,"ip":"127.0.0.1","user_id":94,"user_agent":"Symfony"} 
+[2026-04-12 19:05:34] testing.INFO: GET /api/locations/10/geofence → 200 (5.14ms) {"method":"GET","path":"api/locations/10/geofence","status":200,"duration_ms":5.14,"ip":"127.0.0.1","user_id":95,"user_agent":"Symfony"} 
+[2026-04-12 19:05:35] testing.INFO: GET /api/locations/11 → 200 (10.13ms) {"method":"GET","path":"api/locations/11","status":200,"duration_ms":10.13,"ip":"127.0.0.1","user_id":98,"user_agent":"Symfony"} 
+[2026-04-12 19:05:36] testing.WARNING: PUT /api/enrollments/21/transition → 403 (2.74ms) {"method":"PUT","path":"api/enrollments/21/transition","status":403,"duration_ms":2.74,"ip":"127.0.0.1","user_id":100,"user_agent":"Symfony","params":{"status":"submitted"}} 
+[2026-04-12 19:05:36] testing.WARNING: POST /api/enrollments/22/cancel → 403 (4.39ms) {"method":"POST","path":"api/enrollments/22/cancel","status":403,"duration_ms":4.39,"ip":"127.0.0.1","user_id":102,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:37] testing.INFO: GET /api/approvals/7 → 200 (4.5ms) {"method":"GET","path":"api/approvals/7","status":200,"duration_ms":4.5,"ip":"127.0.0.1","user_id":104,"user_agent":"Symfony"} 
+[2026-04-12 19:05:37] testing.WARNING: GET /api/approvals/8 → 403 (3.59ms) {"method":"GET","path":"api/approvals/8","status":403,"duration_ms":3.59,"ip":"127.0.0.1","user_id":106,"user_agent":"Symfony"} 
+[2026-04-12 19:05:38] testing.WARNING: POST /api/bookings/19/cancel → 403 (2.06ms) {"method":"POST","path":"api/bookings/19/cancel","status":403,"duration_ms":2.06,"ip":"127.0.0.1","user_id":108,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:38] testing.WARNING: PUT /api/resources/22 → 403 (2.51ms) {"method":"PUT","path":"api/resources/22","status":403,"duration_ms":2.51,"ip":"127.0.0.1","user_id":110,"user_agent":"Symfony","params":{"name":"Hacked"}} 
+[2026-04-12 19:05:39] testing.WARNING: DELETE /api/resources/23 → 403 (3.11ms) {"method":"DELETE","path":"api/resources/23","status":403,"duration_ms":3.11,"ip":"127.0.0.1","user_id":112,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:39] testing.WARNING: POST /api/auth/register → 422 (8.05ms) {"method":"POST","path":"api/auth/register","status":422,"duration_ms":8.05,"ip":"127.0.0.1","user_id":113,"user_agent":"Symfony","params":{"username":"newuser","name":"New User","email":"[REDACTED]","password":"[REDACTED]"}} 
+[2026-04-12 19:05:39] testing.INFO: POST /api/auth/register → 201 (228.54ms) {"method":"POST","path":"api/auth/register","status":201,"duration_ms":228.54,"ip":"127.0.0.1","user_id":114,"user_agent":"Symfony","params":{"username":"newuser","name":"New User","email":"[REDACTED]","password":"[REDACTED]"}} 
+[2026-04-12 19:05:40] testing.WARNING: POST /api/auth/register → 422 (4.3ms) {"method":"POST","path":"api/auth/register","status":422,"duration_ms":4.3,"ip":"127.0.0.1","user_id":116,"user_agent":"Symfony","params":{"username":"newuser2","name":"New User","email":"[REDACTED]","password":"[REDACTED]"}} 
+[2026-04-12 19:05:40] testing.WARNING: POST /api/auth/register → 422 (3.23ms) {"method":"POST","path":"api/auth/register","status":422,"duration_ms":3.23,"ip":"127.0.0.1","user_id":117,"user_agent":"Symfony","params":{"username":"newuser3","name":"New User","email":"[REDACTED]","password":"[REDACTED]"}} 
+[2026-04-12 19:05:40] testing.INFO: POST /api/reports → 201 (4.31ms) {"method":"POST","path":"api/reports","status":201,"duration_ms":4.31,"ip":"127.0.0.1","user_id":118,"user_agent":"Symfony","params":{"name":"Active Learners","type":"learners","output_format":"csv","filters":{"status":"active"},"columns":["id","first_name","last_name","email"]}} 
+[2026-04-12 19:05:40] testing.INFO: GET /api/reports → 200 (5.24ms) {"method":"GET","path":"api/reports","status":200,"duration_ms":5.24,"ip":"127.0.0.1","user_id":119,"user_agent":"Symfony"} 
+[2026-04-12 19:05:41] testing.INFO: POST /api/reports/3/generate → 200 (26.42ms) {"method":"POST","path":"api/reports/3/generate","status":200,"duration_ms":26.42,"ip":"127.0.0.1","user_id":120,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:41] testing.INFO: POST /api/reports/4/generate → 200 (4.67ms) {"method":"POST","path":"api/reports/4/generate","status":200,"duration_ms":4.67,"ip":"127.0.0.1","user_id":121,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:41] testing.WARNING: GET /api/reports/5/download → 404 (2.73ms) {"method":"GET","path":"api/reports/5/download","status":404,"duration_ms":2.73,"ip":"127.0.0.1","user_id":122,"user_agent":"Symfony"} 
+[2026-04-12 19:05:41] testing.WARNING: POST /api/reports → 422 (3.86ms) {"method":"POST","path":"api/reports","status":422,"duration_ms":3.86,"ip":"127.0.0.1","user_id":123,"user_agent":"Symfony","params":{"name":"Bad Report","type":"invalid_type","output_format":"csv"}} 
+[2026-04-12 19:05:42] testing.INFO: POST /api/resources → 201 (2.99ms) {"method":"POST","path":"api/resources","status":201,"duration_ms":2.99,"ip":"127.0.0.1","user_id":124,"user_agent":"Symfony","params":{"name":"Conference Room A","type":"room","capacity":20}} 
+[2026-04-12 19:05:42] testing.INFO: GET /api/resources → 200 (3.85ms) {"method":"GET","path":"api/resources","status":200,"duration_ms":3.85,"ip":"127.0.0.1","user_id":125,"user_agent":"Symfony"} 
+[2026-04-12 19:05:42] testing.INFO: POST /api/schedules → 201 (4.5ms) {"method":"POST","path":"api/schedules","status":201,"duration_ms":4.5,"ip":"127.0.0.1","user_id":126,"user_agent":"Symfony","params":{"resource_id":27,"date":"2026-04-13","start_time":"09:00","end_time":"17:00"}} 
+[2026-04-12 19:05:42] testing.INFO: GET /api/schedules/2/slots → 200 (2.93ms) {"method":"GET","path":"api/schedules/2/slots","status":200,"duration_ms":2.93,"ip":"127.0.0.1","user_id":127,"user_agent":"Symfony"} 
+[2026-04-12 19:05:43] testing.INFO: POST /api/routes → 201 (6.81ms) {"method":"POST","path":"api/routes","status":201,"duration_ms":6.81,"ip":"127.0.0.1","user_id":128,"user_agent":"Symfony","params":{"name":"Route Alpha","waypoints":[{"lat":1,"lng":2},{"lat":3,"lng":4}]}} 
+[2026-04-12 19:05:43] testing.INFO: POST /api/routes → 201 (4.12ms) {"method":"POST","path":"api/routes","status":201,"duration_ms":4.12,"ip":"127.0.0.1","user_id":129,"user_agent":"Symfony","params":{"name":"Route Beta","waypoints":[{"lat":1,"lng":2}]}} 
+[2026-04-12 19:05:43] testing.INFO: PUT /api/routes/2 → 200 (3.89ms) {"method":"PUT","path":"api/routes/2","status":200,"duration_ms":3.89,"ip":"127.0.0.1","user_id":129,"user_agent":"Symfony","params":{"waypoints":[{"lat":5,"lng":6},{"lat":7,"lng":8}],"change_reason":"Updated waypoints"}} 
+[2026-04-12 19:05:43] testing.INFO: GET /api/routes/2/versions → 200 (1.65ms) {"method":"GET","path":"api/routes/2/versions","status":200,"duration_ms":1.65,"ip":"127.0.0.1","user_id":129,"user_agent":"Symfony"} 
+[2026-04-12 19:05:43] testing.INFO: DELETE /api/resources/29 → 200 (3.11ms) {"method":"DELETE","path":"api/resources/29","status":200,"duration_ms":3.11,"ip":"127.0.0.1","user_id":130,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:44] testing.INFO: POST /api/waitlist → 201 (4.78ms) {"method":"POST","path":"api/waitlist","status":201,"duration_ms":4.78,"ip":"127.0.0.1","user_id":131,"user_agent":"Symfony","params":{"resource_id":30,"learner_id":64,"start_time":"2026-04-14T19:00:00+00:00","end_time":"2026-04-14T19:30:00+00:00"}} 
+[2026-04-12 19:05:44] testing.INFO: POST /api/bookings/20/cancel → 200 (5.3ms) {"method":"POST","path":"api/bookings/20/cancel","status":200,"duration_ms":5.3,"ip":"127.0.0.1","user_id":131,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:44] testing.WARNING: POST /api/waitlist/3/accept → 422 (2.94ms) {"method":"POST","path":"api/waitlist/3/accept","status":422,"duration_ms":2.94,"ip":"127.0.0.1","user_id":132,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:44] testing.INFO: POST /api/waitlist/4/accept → 200 (6.16ms) {"method":"POST","path":"api/waitlist/4/accept","status":200,"duration_ms":6.16,"ip":"127.0.0.1","user_id":133,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:44] testing.INFO: POST /api/waitlist → 201 (4.63ms) {"method":"POST","path":"api/waitlist","status":201,"duration_ms":4.63,"ip":"127.0.0.1","user_id":134,"user_agent":"Symfony","params":{"resource_id":33,"learner_id":69,"start_time":"2026-04-14T19:00:00+00:00","end_time":"2026-04-14T19:30:00+00:00"}} 
+[2026-04-12 19:05:44] testing.INFO: POST /api/waitlist → 201 (3.6ms) {"method":"POST","path":"api/waitlist","status":201,"duration_ms":3.6,"ip":"127.0.0.1","user_id":134,"user_agent":"Symfony","params":{"resource_id":33,"learner_id":70,"start_time":"2026-04-14T19:00:00+00:00","end_time":"2026-04-14T19:30:00+00:00"}} 
+[2026-04-12 19:05:45] testing.WARNING: POST /api/waitlist/8/accept → 422 (2.98ms) {"method":"POST","path":"api/waitlist/8/accept","status":422,"duration_ms":2.98,"ip":"127.0.0.1","user_id":137,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:45] testing.INFO: GET /api/waitlist → 200 (6.51ms) {"method":"GET","path":"api/waitlist","status":200,"duration_ms":6.51,"ip":"127.0.0.1","user_id":138,"user_agent":"Symfony"} 
+[2026-04-12 19:05:46] testing.INFO: POST /api/bookings → 201 (8.35ms) {"method":"POST","path":"api/bookings","status":201,"duration_ms":8.35,"ip":"127.0.0.1","user_id":140,"user_agent":"Symfony","params":{"resource_id":39,"learner_id":81,"start_time":"2026-04-15T19:00:00+00:00","end_time":"2026-04-15T19:30:00+00:00"}} 
+[2026-04-12 19:05:46] testing.INFO: POST /api/bookings/24/confirm → 200 (5.54ms) {"method":"POST","path":"api/bookings/24/confirm","status":200,"duration_ms":5.54,"ip":"127.0.0.1","user_id":140,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:46] testing.INFO: POST /api/bookings/24/cancel → 200 (4.4ms) {"method":"POST","path":"api/bookings/24/cancel","status":200,"duration_ms":4.4,"ip":"127.0.0.1","user_id":140,"user_agent":"Symfony","params":[]} 
+[2026-04-12 19:05:46] testing.INFO: POST /api/bookings → 201 (6.85ms) {"method":"POST","path":"api/bookings","status":201,"duration_ms":6.85,"ip":"127.0.0.1","user_id":141,"user_agent":"Symfony","params":{"resource_id":40,"learner_id":84,"start_time":"2026-04-14T19:00:00+00:00","end_time":"2026-04-14T19:30:00+00:00"}} 

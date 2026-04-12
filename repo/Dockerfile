@@ -31,7 +31,8 @@ RUN /usr/local/bin/composer install --no-interaction --prefer-dist --optimize-au
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 COPY docker/entrypoint.sh /usr/local/bin/app-entrypoint.sh
-RUN chmod +x /usr/local/bin/app-entrypoint.sh
+COPY docker/worker-entrypoint.sh /usr/local/bin/worker-entrypoint.sh
+RUN chmod +x /usr/local/bin/app-entrypoint.sh /usr/local/bin/worker-entrypoint.sh
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
