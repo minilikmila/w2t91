@@ -3,6 +3,9 @@ set -e
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 cd /var/www
 
+# Clear readiness marker so the worker doesn't start before we finish
+rm -f /var/www/storage/.entrypoint-done
+
 # Bootstrap env for first run (Compose also injects DB_*; Laravel still needs a .env file)
 if [ ! -f .env ] && [ -f .env.example ]; then
   echo "No .env file; copying .env.example -> .env"
@@ -54,12 +57,24 @@ if [ "$RUN_DB_WAIT" = "1" ]; then
 fi
 
 if [ "${AUTORUN_MIGRATIONS:-1}" = "1" ] && [ -f .env ]; then
-  php artisan migrate --force
+  MIGRATE_TRIES=0
+  until php artisan migrate --force; do
+    MIGRATE_TRIES=$((MIGRATE_TRIES + 1))
+    if [ "$MIGRATE_TRIES" -ge 3 ]; then
+      echo "ERROR: Migrations failed after $MIGRATE_TRIES attempts."
+      exit 1
+    fi
+    echo "Migration attempt $MIGRATE_TRIES failed, retrying in 5s..."
+    sleep 5
+  done
 fi
 
 if [ "${AUTORUN_SEED:-1}" = "1" ] && [ -f .env ]; then
   echo "Ensuring database seed (skipped if roles already exist)..."
   php docker/seed-if-empty.php
 fi
+
+# Signal that the entrypoint finished (composer, migrations, seeding all done)
+touch /var/www/storage/.entrypoint-done
 
 exec /usr/local/bin/docker-php-entrypoint "$@"

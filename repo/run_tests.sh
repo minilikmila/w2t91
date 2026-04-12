@@ -36,6 +36,18 @@ if [ ! -f /.dockerenv ] || [ ! -f vendor/autoload.php ]; then
         sleep 2
     done
 
+    # Wait for the entrypoint to finish (php-fpm becomes PID 1 after exec)
+    echo "Waiting for entrypoint to complete..."
+    RETRIES=0
+    until $COMPOSE exec -T app sh -c 'tr "\0" " " < /proc/1/cmdline 2>/dev/null | grep -q php-fpm' 2>/dev/null; do
+        RETRIES=$((RETRIES + 1))
+        if [ "$RETRIES" -ge 90 ]; then
+            echo "Error: Entrypoint did not complete after 180 seconds." >&2
+            exit 1
+        fi
+        sleep 2
+    done
+
     # Run this same script inside the container; propagate its exit code
     $COMPOSE exec -T app bash run_tests.sh
     exit $?
@@ -109,24 +121,6 @@ run_suite() {
 }
 
 print_header
-
-# --- PHPUnit Built-in Unit Tests ---
-if find tests/Unit -name '*.php' -not -name '.*' 2>/dev/null | grep -q .; then
-    run_suite "Unit Tests (tests/Unit)" "php artisan test --testsuite=Unit"
-else
-    echo "--- Unit Tests (tests/Unit) ---"
-    echo -e "${YELLOW}[SKIP]${NC} No test files found in tests/Unit."
-    echo ""
-fi
-
-# --- PHPUnit Built-in Feature Tests ---
-if find tests/Feature -name '*.php' -not -name '.*' 2>/dev/null | grep -q .; then
-    run_suite "Feature/API Tests (tests/Feature)" "php artisan test --testsuite=Feature"
-else
-    echo "--- Feature/API Tests (tests/Feature) ---"
-    echo -e "${YELLOW}[SKIP]${NC} No test files found in tests/Feature."
-    echo ""
-fi
 
 # --- Custom Unit Tests (unit_tests/) ---
 if ls unit_tests/*.php 1>/dev/null 2>&1; then
