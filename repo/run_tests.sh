@@ -57,6 +57,15 @@ fi
 # Inside the container – run tests directly.
 # ---------------------------------------------------------------------------
 
+# Force test environment at the OS level so docker-compose env vars
+# (DB_CONNECTION=mysql, etc.) cannot leak into PHPUnit/Laravel.
+export APP_ENV=testing
+export DB_CONNECTION=sqlite
+export DB_DATABASE=:memory:
+export CACHE_DRIVER=array
+export QUEUE_CONNECTION=sync
+export SESSION_DRIVER=array
+
 PASS=0
 FAIL=0
 TOTAL_TESTS=0
