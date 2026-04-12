@@ -1,0 +1,3 @@
+id,first_name,last_name,date_of_birth,email,search_email,phone,search_phone,gender,nationality,language,address,guardian_name,guardian_contact,status,fingerprint,metadata,created_at,updated_at,deleted_at
+60,Alice,Test,,,,,,,,,,,,active,,,2026-04-12T19:25:46.000000Z,2026-04-12T19:25:46.000000Z,
+61,Bob,Test,,,,,,,,,,,,active,,,2026-04-12T19:25:46.000000Z,2026-04-12T19:25:46.000000Z,

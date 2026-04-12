@@ -9,7 +9,7 @@ while [ ! -f /var/www/vendor/autoload.php ]; do
   sleep 2
 done
 
-# Wait for the cache table to exist (signals app container finished migrations)
+# Wait for queue/cache tables to be fully usable before starting the worker.
 echo "Worker: waiting for database migrations..."
 RETRIES=0
 while [ "$RETRIES" -lt 60 ]; do
@@ -21,8 +21,15 @@ while [ "$RETRIES" -lt 60 ]; do
       \$u = getenv('DB_USERNAME') ?: 'eaglepoint';
       \$w = getenv('DB_PASSWORD') ?: 'secret';
       \$pdo = new PDO('mysql:host=' . \$h . ';port=' . \$p . ';dbname=' . \$d, \$u, \$w);
-      \$stmt = \$pdo->query(\"SHOW TABLES LIKE 'jobs'\");
-      exit(\$stmt->rowCount() > 0 ? 0 : 1);
+      \$cacheTable = \$pdo->query(\"SHOW TABLES LIKE 'cache'\");
+      \$jobsTable = \$pdo->query(\"SHOW TABLES LIKE 'jobs'\");
+
+      if (\$cacheTable->rowCount() === 0 || \$jobsTable->rowCount() === 0) {
+        exit(1);
+      }
+
+      \$pdo->query(\"SELECT 1 FROM cache LIMIT 1\");
+      exit(0);
     } catch (Throwable \$e) { exit(1); }
   " 2>/dev/null; then
     echo "Worker: database ready."

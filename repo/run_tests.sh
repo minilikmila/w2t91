@@ -111,10 +111,22 @@ run_suite() {
 print_header
 
 # --- PHPUnit Built-in Unit Tests ---
-run_suite "Unit Tests (tests/Unit)" "php artisan test --testsuite=Unit"
+if find tests/Unit -name '*.php' -not -name '.*' 2>/dev/null | grep -q .; then
+    run_suite "Unit Tests (tests/Unit)" "php artisan test --testsuite=Unit"
+else
+    echo "--- Unit Tests (tests/Unit) ---"
+    echo -e "${YELLOW}[SKIP]${NC} No test files found in tests/Unit."
+    echo ""
+fi
 
 # --- PHPUnit Built-in Feature Tests ---
-run_suite "Feature/API Tests (tests/Feature)" "php artisan test --testsuite=Feature"
+if find tests/Feature -name '*.php' -not -name '.*' 2>/dev/null | grep -q .; then
+    run_suite "Feature/API Tests (tests/Feature)" "php artisan test --testsuite=Feature"
+else
+    echo "--- Feature/API Tests (tests/Feature) ---"
+    echo -e "${YELLOW}[SKIP]${NC} No test files found in tests/Feature."
+    echo ""
+fi
 
 # --- Custom Unit Tests (unit_tests/) ---
 if ls unit_tests/*.php 1>/dev/null 2>&1; then
